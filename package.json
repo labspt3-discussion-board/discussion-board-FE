@@ -1,0 +1,23 @@
+{
+  "name": "discussion-board-FE",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/labspt3-discussion-board/discussion-board-FE.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/labspt3-discussion-board/discussion-board-FE/issues"
+  },
+  "homepage": "https://github.com/labspt3-discussion-board/discussion-board-FE#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
