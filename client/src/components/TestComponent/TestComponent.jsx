@@ -11,7 +11,7 @@ import axios 								 from 'axios';
 
 
 const DEV_HOST = 'http://localhost:8000';
-const HOST = 'https://discussion-board-api-test.herokuapp.com/'
+const HOST = 'https://discussion-board-api.herokuapp.com/'
 
 const Navbar = props => (
 	<div className={props.classes.root}>
