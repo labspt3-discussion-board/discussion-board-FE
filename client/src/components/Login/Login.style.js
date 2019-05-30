@@ -104,6 +104,9 @@ export const styles = {
 			textDecoration: 'none',
 			'&:hover': {
 				textDecoration: 'underline',
+			},
+			'&:active': {
+				color: '#3F51B5',
 			}
 		}
 	},

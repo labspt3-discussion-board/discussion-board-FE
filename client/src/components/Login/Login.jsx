@@ -17,7 +17,7 @@ const Email = props => {
 		<>
 			<TextField
 				id='signin-email-input'
-				name='email'
+				name='signin-email'
 				className={ classes.input }
 				variant='outlined'
 				type='email'
