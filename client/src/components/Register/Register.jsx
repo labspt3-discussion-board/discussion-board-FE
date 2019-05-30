@@ -2,10 +2,11 @@ import React, { Component, }  from 'react';
 import { styles, }            from './Register.style.js';
 import { Visibility, VisibilityOff, }  							        from '@material-ui/icons';
 import { withStyles, Typography, TextField, FormControlLabel, Checkbox, Button, InputAdornment, IconButton, Icon, }        from '@material-ui/core';
+import Axios from 'axios';
 
 const FirstName = props => {
 
-	const { firstNameInput } = props;
+	const { firstNameInput, firstName, handleChange, } = props;
 
 	return (
 		<>
@@ -17,7 +18,8 @@ const FirstName = props => {
 				variant='outlined'
 				label='First Name'
 				required
-
+				value={ firstName.value }
+				onChange={ e => handleChange(e, 'firstName') }
 			/>
 		</>
 	);
@@ -25,7 +27,7 @@ const FirstName = props => {
 
 const LastName = props => {
 
-	const { lastNameInput } = props;
+	const { lastNameInput, lastName, handleChange, } = props;
 
 	return (
 		<>
@@ -37,6 +39,8 @@ const LastName = props => {
 				variant='outlined'
 				label='Last Name'
 				required
+				value={ lastName.value }
+				onChange={ e => handleChange(e, 'lastName') }
 			/>
 		</>
 	);
@@ -137,7 +141,7 @@ const Password = props => {
 
 const AgreeToTerms = props => {
 	
-	const { checkBox, handleChange, agreeToTermsLink, } = props;
+	const { checkBox, handleChange, agreeToTermsLink, agreeToTerms, } = props;
 
 	return (
 		<div style={{ minWidth: '260px', margin: '0px 5px', }}>
@@ -145,7 +149,7 @@ const AgreeToTerms = props => {
 				control={
 					<Checkbox
 						className={ checkBox }
-						value='CheckedA'
+						checked={ agreeToTerms }
 						onChange={ e => handleChange(e, 'agreeToTerms') }
 					/>
 				}
@@ -176,7 +180,7 @@ const SubscribePremium = props => {
 
 const SignUpButton = props => {
 
-	const { button, agreeToTerms, } = props;
+	const { button, agreeToTerms, handleSubmit, } = props;
 
 	return (
 		<>
@@ -187,6 +191,7 @@ const SignUpButton = props => {
 				color='primary'
 				type='submit'
 				disabled={ !agreeToTerms }
+				onClick={ handleSubmit }
 			>
 				Continue
 			</Button>
@@ -211,22 +216,22 @@ class Register extends Component {
 
 		this.state = {
 			firstName: {
-				value: '',
+				value: 'first',
 			},
 			lastName: {
-				value: '',
+				value: 'last',
 			},
 			email: {
-				value: '',
+				value: 'email@mail.com',
 			},
 			username: {
-				value: '',
+				value: 'username',
 			},
 			password: {
-				value: '',
+				value: 'password',
 				show: false,
 			},
-			agreeToTerms: false,
+			agreeToTerms: true,
 		};
 
 	}
@@ -258,6 +263,31 @@ class Register extends Component {
 		});
 	}
 
+	handleSubmit = e => {
+		e.preventDefault();
+
+		Axios.post('http://localhost:8000/api/users/', {
+			firstName: this.state.firstName.value,
+			lastName:  this.state.lastName.value,
+			email:     this.state.email.value,
+			username:  this.state.username.value,
+			password:  this.state.password.value,
+		}).then(res => {
+			console.log(res.data);
+		}).catch(err => console.log(err));
+
+	}
+
+	componentDidMount() {
+
+		Axios.get('http://localhost:8000/api/users/', {
+
+		}).then(res => {
+			console.log(res.data);
+		}).catch(err => console.log(err));
+
+	}
+
 	render() {
 
 		const { classes } = this.props;
@@ -271,10 +301,10 @@ class Register extends Component {
 					<FirstName 
 						{ ...this.state } 
 						handleChange={ this.handleChange }
-						{ ...classes } 
+						{ ...classes }
 					/>
 
-					<LastName 
+					<LastName
 						{ ...this.state } 
 						handleChange={ this.handleChange }
 						{ ...classes } 
@@ -303,7 +333,8 @@ class Register extends Component {
 				</div>
 
 				<div className={ classes.innerContainerThree }>
-					<AgreeToTerms 
+					<AgreeToTerms
+						{ ...this.state }
 						handleChange={ this.handleCheckBoxChange }
 						{ ...classes } 
 					/>
@@ -317,10 +348,11 @@ class Register extends Component {
 					<SignUpButton 
 						{ ...this.state }
 						{ ...classes } 
+						handleSubmit={ this.handleSubmit }
 					/>
 					<ExistingMember 
 						handleLoginModal={ this.props.handleLoginModal }
-						{ ...classes } 
+						{ ...classes }
 					/>
 				</div>
 
