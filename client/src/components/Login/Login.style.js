@@ -22,7 +22,7 @@ export const styles = {
 		// border: '1px solid black',
 		margin: 'auto',
 		position: 'relative',
-		top: '-52px',
+		top: '-100px',
 	},
 	innerContainerOne: {
 		// border: '1px solid black',
@@ -158,5 +158,12 @@ export const styles = {
 		'&:hover': {
 			backgroundColor: '#2a4786',
 		}
-	}
+	},
+	closeIconContainer: {
+		width: '100%',
+		display: 'flex',
+		justifyContent:'flex-end',
+		position: 'relative',
+		top: '-100px',
+	},
 };

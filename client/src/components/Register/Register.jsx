@@ -200,7 +200,7 @@ const ExistingMember = props => {
 
 	return (
 		<div className={ options }>
-			<a href='#'><Typography color='primary'>Already have an account? Sign in</Typography></a>
+			<a href='#' onClick={ props.handleLoginModal }><Typography color='primary'>Already have an account? Sign in</Typography></a>
 		</div>
 	);
 }
@@ -318,7 +318,10 @@ class Register extends Component {
 						{ ...this.state }
 						{ ...classes } 
 					/>
-					<ExistingMember { ...classes } />
+					<ExistingMember 
+						handleLoginModal={ this.props.handleLoginModal }
+						{ ...classes } 
+					/>
 				</div>
 
 			</form>

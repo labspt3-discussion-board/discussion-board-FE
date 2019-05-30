@@ -2,7 +2,7 @@ import React, { Component, useState, }        					    from 'react';
 import PropTypes                              					    from 'prop-types';
 import { FontAwesomeIcon } 										              from '@fortawesome/react-fontawesome'
 import clsx													                        from 'clsx';
-import { Visibility, VisibilityOff, }  							        from '@material-ui/icons';
+import { Visibility, VisibilityOff, Close, }  							        from '@material-ui/icons';
 import { styles, }                            					    from './Login.style.js';
 import { withStyles, Typography, TextField, InputAdornment, 
 	IconButton, Button, Checkbox, FormGroup, Icon,
@@ -166,8 +166,6 @@ class Login extends Component {
 		};
 
 	}
-	
-
 
 	handleChange = (e, prop) => {
 		this.setState({
@@ -194,13 +192,24 @@ class Login extends Component {
 
 		return (
 			<Modal
-				open={ true }
+				open={ this.props.loginModal.open }
 				className={ classes.modal }
 			>
 			<Card className={ classes.card }>
+
 				<div className={ classes.headerIcon }>
-						<FontAwesomeIcon icon='user-alt' />
+					<FontAwesomeIcon icon='user-alt' />
 				</div>
+
+				<div className={ classes.closeIconContainer }>
+					<IconButton 
+						size='small'
+						onClick={ this.props.handleLoginModal }
+					>
+						<Close />
+					</IconButton>
+				</div>
+
 				<div className={ classes.container }>
 
 					<Typography
@@ -224,10 +233,9 @@ class Login extends Component {
 							classes={ classes }
 						/>
 
-						<RememberMe 
+						<RememberMe
 							{ ...classes }
 						/>
-
 					</div>
 
 					<div className={ classes.innerContainerTwo }>
