@@ -216,22 +216,22 @@ class Register extends Component {
 
 		this.state = {
 			firstName: {
-				value: 'first',
+				value: '',
 			},
 			lastName: {
-				value: 'last',
+				value: '',
 			},
 			email: {
-				value: 'email@mail.com',
+				value: '',
 			},
 			username: {
-				value: 'username',
+				value: '',
 			},
 			password: {
-				value: 'password',
+				value: '',
 				show: false,
 			},
-			agreeToTerms: true,
+			agreeToTerms: false,
 		};
 
 	}
