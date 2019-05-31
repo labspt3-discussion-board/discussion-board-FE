@@ -8,8 +8,7 @@ import { styles } from './LandingPage.style.js';
 export default withStyles(styles)(props => {
   const {classes} = props;
   return (
-    <div>
-      <Navigation />
+    <div>      
       <DiscussionContainer classes={classes}/>
     </div>
   )

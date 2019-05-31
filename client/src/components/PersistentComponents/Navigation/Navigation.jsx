@@ -24,8 +24,8 @@ export default withStyles(styles)(props => {
           Lambda Forum
           {/* <img src="../../../../public/images/LambdaLogo.png"/> */}
       </Typography>
-        <SearchBar classes={classes} />
-        <SignIOU classes={classes} />
+        <SearchBar classes={classes}/>
+        <SignIOU classes={classes} handleLoginModal={ props.handleLoginModal } />
       </Toolbar>
     </AppBar>
     // </div>
