@@ -1,6 +1,6 @@
 import React, { Component, }                     from 'react';
 import CssBaseline               from '@material-ui/core/CssBaseline';
-import { TestComponent, Login, Register, } from '../../components.js';
+import { TestComponent, Login, Register, LandingPage } from '../../components.js';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignInAlt, faUserAlt, } from '@fortawesome/free-solid-svg-icons';
@@ -34,11 +34,11 @@ class App extends Component {
       <>
         <CssBaseline />
         <Login { ...this.state } handleLoginModal={ this.handleLoginModal } />
-        <Register handleLoginModal={ this.handleLoginModal } />
+        { /* <Register handleLoginModal={ this.handleLoginModal } /> */ }
+        <LandingPage />
       </>
     );
   }
-  
 }
 
-export default App;
+export default App
