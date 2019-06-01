@@ -18,7 +18,12 @@ const LoginLink = props => {
 
   return (
     <>
-      <Typography variant='body1' className={ classes.loginLink }>Log In</Typography>
+      <Typography
+        variant='body1' className={ classes.loginLink }
+        onClick={ props.handleLoginModal }
+      >
+        Log In
+      </Typography>
     </>
   );
 }
@@ -42,8 +47,8 @@ const SignUpButton = props => {
 
 
 export default withStyles(styles)(props => {
+  
   const { classes } = props;
-
 
   return (
     // <div className={props.classes.navigationContainer}>
@@ -57,7 +62,10 @@ export default withStyles(styles)(props => {
         <SearchBar classes={classes}/>
 
         <div className={ classes.containerRight }>
-          <LoginLink classes={ classes } />
+          <LoginLink 
+            handleLoginModal={ props.handleLoginModal } 
+            classes={ classes }
+          />
           <SignUpButton classes={ classes } />
         </div>
         

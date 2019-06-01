@@ -3,6 +3,7 @@ import { styles, }            from './Register.style.js';
 import { Visibility, VisibilityOff, }  							        from '@material-ui/icons';
 import { withStyles, Typography, TextField, FormControlLabel, Checkbox, Button, InputAdornment, IconButton, Icon, CircularProgress, }        from '@material-ui/core';
 import green from '@material-ui/core/colors/green';
+import Cookies from 'js-cookie';
 import Axios from 'axios';
 
 const FirstName = props => {
@@ -282,14 +283,20 @@ class Register extends Component {
 		// 	}
 		// });
 
-		Axios.post(this.HOST + 'api/users/', {
-			firstName: this.state.firstName.value,
-			lastName:  this.state.lastName.value,
-			email:     this.state.email.value,
-			username:  this.state.username.value,
-			password:  this.state.password.value,
+		Axios({
+			url: this.HOST + 'api/users/',
+			method: 'post',
+			// headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
+			withCredentials: true,
+			data: {
+				firstName: this.state.firstName.value,
+				lastName:  this.state.lastName.value,
+				email:     this.state.email.value,
+				username:  this.state.username.value,
+				password:  this.state.password.value,
+			}
 		}).then(res => {
-			console.log(res.data);
+			console.log(res);
 		}).catch(err => console.log(err));
 
 	}
