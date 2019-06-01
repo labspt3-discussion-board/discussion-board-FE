@@ -1,7 +1,8 @@
 import React, { Component, }  from 'react';
 import { styles, }            from './Register.style.js';
 import { Visibility, VisibilityOff, }  							        from '@material-ui/icons';
-import { withStyles, Typography, TextField, FormControlLabel, Checkbox, Button, InputAdornment, IconButton, Icon, }        from '@material-ui/core';
+import { withStyles, Typography, TextField, FormControlLabel, Checkbox, Button, InputAdornment, IconButton, Icon, CircularProgress, }        from '@material-ui/core';
+import green from '@material-ui/core/colors/green';
 import Axios from 'axios';
 
 const FirstName = props => {
@@ -180,7 +181,8 @@ const SubscribePremium = props => {
 
 const SignUpButton = props => {
 
-	const { button, agreeToTerms, handleSubmit, } = props;
+	const { button, buttonProgress, agreeToTerms, handleSubmit, } = props;
+	const { loading, } = props.signUpButton;
 
 	return (
 		<>
@@ -190,10 +192,11 @@ const SignUpButton = props => {
 				size='large'
 				color='primary'
 				type='submit'
-				disabled={ !agreeToTerms }
+				disabled={ !agreeToTerms || loading }
 				onClick={ handleSubmit }
 			>
 				Continue
+				{ loading && <CircularProgress size={ 24 } color='secondary' className={ buttonProgress } /> }
 			</Button>
 		</>
 	);
@@ -231,9 +234,14 @@ class Register extends Component {
 				value: '',
 				show: false,
 			},
+			signUpButton: {
+				loading: false,
+			},
 			agreeToTerms: false,
 		};
 
+		this.HOST = this.props.HOST;
+		
 	}
 
 	handleChange = (e, prop) => {
@@ -266,7 +274,15 @@ class Register extends Component {
 	handleSubmit = e => {
 		e.preventDefault();
 
-		Axios.post('http://localhost:8000/api/users/', {
+		// this.setState({
+		// 	...this.state,
+		// 	signUpButton: {
+		// 		...this.state.signUpButton,
+		// 		loading: true,
+		// 	}
+		// });
+
+		Axios.post(this.HOST + 'api/users/', {
 			firstName: this.state.firstName.value,
 			lastName:  this.state.lastName.value,
 			email:     this.state.email.value,

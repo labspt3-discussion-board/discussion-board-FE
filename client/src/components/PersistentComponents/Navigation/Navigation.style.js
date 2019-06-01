@@ -10,9 +10,16 @@ export const styles = {
     justifyContent: 'space-between',
     // border: '1px solid blue'
   },
+  containerRight: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // border: '1px solid black',
+    width: '160px',
+  },
   signContainer: {
     display: 'flex',
-    // border: '1px solid white',
+    border: '1px solid white',
   },
   searchBar: {
     color: 'white',
@@ -21,5 +28,22 @@ export const styles = {
   },
   signShared:{
     color: 'white'
+  },
+  loginLink: {
+    // border: '1px solid black',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    color: '#FFFFFF',
+    '&:hover': {
+      color: '#DADADA',
+    }
+  },
+  signUpButton: {
+    fontSize: '1rem',
+    textTransform: 'capitalize',
+    // border: '1px solid black',
+    width: '90px',
+  }, signUpButtonLink: {
+    textDecoration: 'none',
   }
 };

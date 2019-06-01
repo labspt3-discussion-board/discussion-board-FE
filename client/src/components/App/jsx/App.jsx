@@ -9,11 +9,23 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 library.add(faSignInAlt, faUserAlt, fab);
 
+// const HOST = 'https://discussion-board-api.herokuapp.com/';
+const HOST = 'http://localhost:8000/'
+
+
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      user: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        username: '',
+        premium: false,
+        loggedIn: false,
+      },
       loginModal: {
         open: false,
       },
@@ -34,8 +46,15 @@ class App extends Component {
     return (
       <Router>
         <CssBaseline />
-        <Navigation handleLoginModal={ this.handleLoginModal } />
-        <Login { ...this.state } handleLoginModal={ this.handleLoginModal } />
+        <Navigation 
+          handleLoginModal={ this.handleLoginModal } 
+        />
+
+        <Login 
+          { ...this.state } 
+          handleLoginModal={ this.handleLoginModal }
+          HOST={ HOST }
+        />
 
         <Route path="/" exact render={() => {
           return (
@@ -49,6 +68,7 @@ class App extends Component {
           return (
             <Register 
               handleLoginModal={ this.handleLoginModal }
+              HOST={ HOST }
             />)
           }} 
         />

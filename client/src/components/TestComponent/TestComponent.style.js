@@ -28,6 +28,11 @@ export const styles = {
 		width: '200px',
 		margin: 'auto',
 	},
+	buttonProgress: {
+		position: 'absolute',
+    top: '50%',
+    left: '50%',
+	},
 	closeIcon: {
 		position: 'relative',
 		top: '50px',
