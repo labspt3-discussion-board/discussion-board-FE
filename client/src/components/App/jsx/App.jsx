@@ -8,12 +8,9 @@ import { fab, }                                 from '@fortawesome/free-brands-s
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Cookies from 'js-cookie';
 import Axios from 'axios';
+import { HOST, } from '../../../constants.js';
 
 library.add(faSignInAlt, faUserAlt, fab);
-
-// const HOST = 'https://discussion-board-api.herokuapp.com/';
-const HOST = 'http://localhost:8000/'
-
 
 class App extends Component {
   constructor(props) {
@@ -135,6 +132,36 @@ class App extends Component {
 
   setUserState = user => {
     this.setState({ ...this.state, user, });
+  }
+
+
+  componentDidMount() {
+
+    Axios({
+      url: `${ HOST }api/users/login/check/`,
+      method: 'get',
+      withCredentials: true,
+    }).then(res => {
+      if (res.data[1].loggedIn === true) {
+        this.setUserState({
+          id:        res.data[0].id,
+          firstName: res.data[0].first_name,
+          lastName:  res.data[0].last_name,
+          email:     res.data[0].email,
+          username:  res.data[0].username,
+          premium:   res.data[0].premium,
+          loggedIn:  res.data[1].loggedIn,
+        });
+      } else {
+        this.setUserState({
+          ...this.state.user,
+          loggedIn: false,
+        });
+      }
+      
+
+    }).catch(err => console.log(err));
+
   }
 
   render() {

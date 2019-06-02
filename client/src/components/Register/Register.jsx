@@ -303,17 +303,7 @@ class Register extends Component {
 		}).catch(err => console.log(err));
 
 	}
-
-	componentDidMount() {
-
-		Axios.get('http://localhost:8000/api/users/', {
-
-		}).then(res => {
-			console.log(res.data);
-		}).catch(err => console.log(err));
-
-	}
-
+	
 	render() {
 
 		const { classes } = this.props;
