@@ -7,6 +7,8 @@ import { styles, }                            					    from './Login.style.js';
 import { withStyles, Typography, TextField, InputAdornment, 
 	IconButton, Button, Checkbox, FormGroup, Icon,
 	FormControlLabel, Modal, Card,} 					                from '@material-ui/core';
+import Axios from 'axios';
+import { HOST, } from '../../constants.js';
 
 const Email = props => {
 
@@ -74,7 +76,7 @@ const Password = props => {
 
 const SignInButton = props => {
 
-	const { button, signInIcon, } = props;
+	const { button, signInIcon, handleLogin } = props;
 
 	return (
 		<>
@@ -83,6 +85,7 @@ const SignInButton = props => {
 				variant='contained'
 				size='large'
 				color='primary'
+				onClick={ (e) => handleLogin(e, props) }
 			>
 				Continue
 			</Button>
@@ -241,6 +244,8 @@ class Login extends Component {
 					<div className={ classes.innerContainerTwo }>
 						<SignInButton 
 							{ ...classes }
+							{ ...this.state }
+							handleLogin={ this.props.handleLogin }
 						/>
 						<Options 
 							{ ...classes } 

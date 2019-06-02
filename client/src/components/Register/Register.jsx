@@ -5,6 +5,7 @@ import { withStyles, Typography, TextField, FormControlLabel, Checkbox, Button, 
 import green from '@material-ui/core/colors/green';
 import Cookies from 'js-cookie';
 import Axios from 'axios';
+import { HOST, } from '../../constants.js';
 
 const FirstName = props => {
 
@@ -182,7 +183,7 @@ const SubscribePremium = props => {
 
 const SignUpButton = props => {
 
-	const { button, buttonProgress, agreeToTerms, handleSubmit, } = props;
+	const { button, buttonProgress, agreeToTerms, } = props;
 	const { loading, } = props.signUpButton;
 
 	return (
@@ -192,9 +193,8 @@ const SignUpButton = props => {
 				variant='contained'
 				size='large'
 				color='primary'
-				type='submit'
 				disabled={ !agreeToTerms || loading }
-				onClick={ handleSubmit }
+				onClick={ e => props.handleRegister(e, props) }
 			>
 				Continue
 				{ loading && <CircularProgress size={ 24 } color='secondary' className={ buttonProgress } /> }
@@ -241,7 +241,6 @@ class Register extends Component {
 			agreeToTerms: false,
 		};
 
-		this.HOST = this.props.HOST;
 		
 	}
 
@@ -275,16 +274,8 @@ class Register extends Component {
 	handleSubmit = e => {
 		e.preventDefault();
 
-		// this.setState({
-		// 	...this.state,
-		// 	signUpButton: {
-		// 		...this.state.signUpButton,
-		// 		loading: true,
-		// 	}
-		// });
-
 		Axios({
-			url: this.HOST + 'api/users/',
+			url: HOST + 'api/users/',
 			method: 'post',
 			// headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
 			withCredentials: true,
@@ -296,7 +287,19 @@ class Register extends Component {
 				password:  this.state.password.value,
 			}
 		}).then(res => {
-			console.log(res);
+
+			const user = {
+				id:        res.data[0].id,
+				firstName: res.data[0].first_name,
+				lastName:  res.data[0].last_name,
+				email:     res.data[0].email,
+				username:  res.data[0].username,
+				premium:   res.data[0].premium,
+				loggedIn:  res.data[1].loggedIn,
+			}
+			
+			this.props.setUserState(user);
+
 		}).catch(err => console.log(err));
 
 	}
@@ -371,7 +374,7 @@ class Register extends Component {
 					<SignUpButton 
 						{ ...this.state }
 						{ ...classes } 
-						handleSubmit={ this.handleSubmit }
+						handleRegister={ this.props.handleRegister }
 					/>
 					<ExistingMember 
 						handleLoginModal={ this.props.handleLoginModal }
