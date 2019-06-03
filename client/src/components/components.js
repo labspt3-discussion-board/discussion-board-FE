@@ -1,1 +1,1 @@
-export { default as TestComponent } from './TestComponent/TestComponent.jsx';
+export { default as LandingPage } from './Views/LandingPage/LandingPage.js';
