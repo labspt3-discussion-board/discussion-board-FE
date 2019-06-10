@@ -23,6 +23,7 @@ const FirstName = props => {
 				required
 				value={ firstName.value }
 				onChange={ e => handleChange(e, 'firstName') }
+				error={ props.firstName.error }
 			/>
 		</>
 	);
@@ -44,6 +45,7 @@ const LastName = props => {
 				required
 				value={ lastName.value }
 				onChange={ e => handleChange(e, 'lastName') }
+				error={ props.lastName.error }
 			/>
 		</>
 	);
@@ -66,6 +68,7 @@ const Email = props => {
 				required				
 				onChange={ e => props.handleChange(e, 'email') }
 				value={ value }
+				error={ props.email.error }
 				InputProps={{
 					endAdornment: (
 					<InputAdornment position='end'>
@@ -95,6 +98,7 @@ const Username = props => {
 				required
 				onChange={ e => props.handleChange(e, 'username') }
 				value={ value }
+				error={ props.username.error }
 				InputProps={{
 					endAdornment: (
 					<InputAdornment position='end'>
@@ -124,6 +128,7 @@ const Password = props => {
 				required
 				onChange={ e => props.handleChange(e, 'password') }
 				value={ value }
+				error={ props.password.error }
 				InputProps={{
 					endAdornment: (
 						<InputAdornment position='end'>
@@ -132,7 +137,7 @@ const Password = props => {
 								aria-label='Toggle password visibility'
 								onClick={ props.handleShowPassword }
 							>
-								{ show ? <VisibilityOff /> : <Visibility /> }
+								{ show ? <Visibility /> : <VisibilityOff /> }
 							</IconButton>
 						</InputAdornment>
 					),
@@ -194,7 +199,7 @@ const SignUpButton = props => {
 				size='large'
 				color='primary'
 				disabled={ !agreeToTerms || loading }
-				onClick={ e => props.handleRegister(e, props) }
+				onClick={ e => props.handleSubmit(e, props) }
 			>
 				Continue
 				{ loading && <CircularProgress size={ 24 } color='secondary' className={ buttonProgress } /> }
@@ -221,35 +226,39 @@ class Register extends Component {
 		this.state = {
 			firstName: {
 				value: '',
+				error: false,
 			},
 			lastName: {
 				value: '',
+				error: false,
 			},
 			email: {
 				value: '',
+				error: false,
 			},
 			username: {
 				value: '',
+				error: false,
 			},
 			password: {
 				value: '',
 				show: false,
+				error: false,
 			},
 			signUpButton: {
 				loading: false,
 			},
 			agreeToTerms: false,
 		};
-
 		
 	}
 
 	handleChange = (e, prop) => {
 		this.setState({
-			...this.state,
 			[prop]: {
 				...this.state[prop],
 				value: e.target.value,
+				error: false,
 			}
 		});
 	}
@@ -271,37 +280,33 @@ class Register extends Component {
 		});
 	}
 
-	handleSubmit = e => {
+	handleSubmit = (e, props) => {
 		e.preventDefault();
 
-		Axios({
-			url: HOST + 'api/users/',
-			method: 'post',
-			// headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
-			withCredentials: true,
-			data: {
-				firstName: this.state.firstName.value,
-				lastName:  this.state.lastName.value,
-				email:     this.state.email.value,
-				username:  this.state.username.value,
-				password:  this.state.password.value,
+		const isValid = this.validateInput();
+
+		isValid && this.props.handleRegister(e, props);
+
+	}
+
+	validateInput = () => {
+
+		const fields     = ['firstName', 'lastName', 'email', 'username', 'password'];
+		const minLengths = [2, 2, 8, 6, 6];
+		let isValid = true;
+
+		for(let i in fields) {
+			if (!(this.state[fields[i]].value.length >= minLengths[i])) {
+				this.setState({
+					[fields[i]]: {
+						...this.state[fields[i]],
+						error: true,
+					}
+				});
+				isValid = false;
 			}
-		}).then(res => {
-
-			const user = {
-				id:        res.data[0].id,
-				firstName: res.data[0].first_name,
-				lastName:  res.data[0].last_name,
-				email:     res.data[0].email,
-				username:  res.data[0].username,
-				premium:   res.data[0].premium,
-				loggedIn:  res.data[1].loggedIn,
-			}
-			
-			this.props.setUserState(user);
-
-		}).catch(err => console.log(err));
-
+		}
+		return isValid;
 	}
 	
 	render() {
@@ -364,7 +369,7 @@ class Register extends Component {
 					<SignUpButton 
 						{ ...this.state }
 						{ ...classes } 
-						handleRegister={ this.props.handleRegister }
+						handleSubmit={ this.handleSubmit }
 					/>
 					<ExistingMember 
 						handleLoginModal={ this.props.handleLoginModal }

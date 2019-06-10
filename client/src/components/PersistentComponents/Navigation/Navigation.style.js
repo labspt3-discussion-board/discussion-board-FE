@@ -45,5 +45,6 @@ export const styles = {
     width: '90px',
   }, signUpButtonLink: {
     textDecoration: 'none',
-  }
+  },
+  
 };

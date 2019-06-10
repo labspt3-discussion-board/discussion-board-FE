@@ -1,14 +1,14 @@
-import React, { Component, }                    from 'react';
-import CssBaseline                              from '@material-ui/core/CssBaseline';
-import { TestComponent, Login, Register,
-         LandingPage, Navigation, }             from '../../components.js';
-import { library }                              from '@fortawesome/fontawesome-svg-core';
-import { faSignInAlt, faUserAlt, }              from '@fortawesome/free-solid-svg-icons';
-import { fab, }                                 from '@fortawesome/free-brands-svg-icons';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Cookies from 'js-cookie';
-import Axios from 'axios';
-import { HOST, } from '../../../constants.js';
+import React, { Component, }                           from 'react';
+import CssBaseline                                     from '@material-ui/core/CssBaseline';
+import { TestComponent, Login, Register, LandingPage,
+         Navigation, LoginMessageModal, }              from '../../components.js';
+import { library }                                     from '@fortawesome/fontawesome-svg-core';
+import { faSignInAlt, faUserAlt, }                     from '@fortawesome/free-solid-svg-icons';
+import { fab, }                                        from '@fortawesome/free-brands-svg-icons';
+import { BrowserRouter as Router, Route, Link }        from "react-router-dom";
+import Cookies                                         from 'js-cookie';
+import Axios                                           from 'axios';
+import { HOST, }                                       from '../../../constants.js';
 
 library.add(faSignInAlt, faUserAlt, fab);
 
@@ -28,21 +28,52 @@ class App extends Component {
       },
       loginModal: {
         open: false,
+        loading: true,
       },
+      loginMessageModal: {
+        open: false,
+      }
     };
   }
 
-  handleLoginModal = e =>{
+  getSearchParams = () => {
+
+    let searchParamsString = window.location.search.substring(1, window.location.search.length);
+    searchParamsString = searchParamsString.split('&');
+
+    const searchParamsArr = searchParamsString.map((param) => {
+      return param.split('=');
+    });
+
+    const searchParams = {};
+
+    for (let i in searchParamsArr) {
+      searchParams[searchParamsArr[i][0]] = searchParamsArr[i][1];
+    }
+
+    return searchParams;
+  }
+
+  handleLoginModal = e => {
     this.setState({
       ...this.state,
       loginModal: {
         ...this.state.loginModal,
         open: !this.state.loginModal.open,
+        loading: true,
       }
     });
   }
 
-  handleLogin = (e, formData) => {
+  handleLoginMessageModal = e => {
+    this.setState({
+      loginMessageModal: {
+        open: !this.state.loginMessageModal,
+      }
+    });
+  }
+
+  handleLogin = (e, formData, cb) => {
 		e.preventDefault();
 
 		Axios({
@@ -64,8 +95,17 @@ class App extends Component {
 				premium:   res.data[0].premium,
 				loggedIn:  res.data[1].loggedIn,
 			}
-			
-			this.setUserState(user);
+      
+      setTimeout(() => {
+      this.setUserState(user);
+        this.setState({
+          loginModal: {
+            ...this.state.loginModal,
+            loading: false,
+          }
+        });
+
+      }, 400);
 
 		}).catch(err => console.log(err));
 
@@ -134,8 +174,19 @@ class App extends Component {
     this.setState({ ...this.state, user, });
   }
 
-
   componentDidMount() {
+
+    if (this.getSearchParams().hasOwnProperty('loggedIn')) {
+      const loggedIn = this.getSearchParams()['loggedIn'];
+
+      if (loggedIn) {
+        this.setState({
+          loginMessageModal: {
+            open: true,
+          }
+        });
+      }
+    }
 
     Axios({
       url: `${ HOST }api/users/login/check/`,
@@ -168,6 +219,12 @@ class App extends Component {
     return (
       <Router>
         <CssBaseline />
+
+        <LoginMessageModal
+          { ...this.state}
+          handleLoginMessageModal={ this.handleLoginMessageModal }
+        />
+
         <Navigation
           { ...this.state }
           handleLoginModal={ this.handleLoginModal }

@@ -5,10 +5,10 @@ import clsx													                        from 'clsx';
 import { Visibility, VisibilityOff, Close, }  							        from '@material-ui/icons';
 import { styles, }                            					    from './Login.style.js';
 import { withStyles, Typography, TextField, InputAdornment, 
-	IconButton, Button, Checkbox, FormGroup, Icon,
-	FormControlLabel, Modal, Card,} 					                from '@material-ui/core';
-import Axios from 'axios';
-import { HOST, } from '../../constants.js';
+				 IconButton, Button, Checkbox, FormGroup, Icon,
+	       FormControlLabel, Modal, Card, CircularProgress, } from '@material-ui/core';
+import { CheckCircle, Error, }                              from '@material-ui/icons';
+import { GOOGLE_OAUTH_ID, GOOGLE_OAUTH_REDIRECT_URI, } from '../../constants.js';
 
 const Email = props => {
 
@@ -18,6 +18,8 @@ const Email = props => {
 	return (
 		<>
 			<TextField
+				error={ props.email.error }
+				helperText={ props.email.helpText }
 				id='signin-email-input'
 				name='signin-email'
 				className={ classes.input }
@@ -47,6 +49,8 @@ const Password = props => {
 
 	return (
 		<TextField
+			error={ props.password.error }
+			helperText={ props.password.helpText }
 			id='signin-password-input'
 			className={ clsx(classes.input, classes.password) }
 			variant='outlined'
@@ -63,7 +67,7 @@ const Password = props => {
 							aria-label='Toggle password visibility'
 							onClick={ props.handleShowPassword }
 						>
-							{ show ? <VisibilityOff /> : <Visibility /> }
+							{ show ? <Visibility /> : <VisibilityOff /> }
 						</IconButton>
 					</InputAdornment>
 				),
@@ -76,7 +80,7 @@ const Password = props => {
 
 const SignInButton = props => {
 
-	const { button, signInIcon, handleLogin } = props;
+	const { button, signInIcon, } = props;
 
 	return (
 		<>
@@ -85,7 +89,9 @@ const SignInButton = props => {
 				variant='contained'
 				size='large'
 				color='primary'
-				onClick={ (e) => handleLogin(e, props) }
+				onClick={ e => {
+					props.handleSubmit(e, props);
+				}}
 			>
 				Continue
 			</Button>
@@ -129,13 +135,17 @@ const GoogleButton = props => {
 
 	const { googleButton, socialButton, socialButtonIcon, socialButtonText, } = props;
 
+	const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${ GOOGLE_OAUTH_ID }&response_type=code&scope=openid%20email%20profile&nonce=${ Math.random() }&redirect_uri=${ GOOGLE_OAUTH_REDIRECT_URI }`;
+
 	return (
-		<button className={ clsx(googleButton, socialButton) }>
-			<span>
-				<span className={ socialButtonIcon }><FontAwesomeIcon icon={['fab', 'google']} /></span>
-				<span className={ socialButtonText }><Typography color='textPrimary' variant='button'><span style={{ color: 'white', }}>Continue with Google</span></Typography></span>
-			</span>
-		</button>
+		<a href={ `${ url }` }>
+			<button className={ clsx(googleButton, socialButton) }>
+				<span>
+					<span className={ socialButtonIcon }><FontAwesomeIcon icon={['fab', 'google']} /></span>
+					<span className={ socialButtonText }><Typography color='textPrimary' variant='button'><span style={{ color: 'white', }}>Continue with Google</span></Typography></span>
+				</span>
+			</button>
+		</a>
 
 	);
 }
@@ -143,6 +153,8 @@ const GoogleButton = props => {
 const FacebookButton = props => {
 
 	const { facebookButton, socialButton, socialButtonIcon, socialButtonText, } = props;
+
+	const url = `https://www.facebook.com/v3.3/dialog/oauth?client_id=${''}&redirect_uri=${''}&state=temp_state`
 
 	return (
 		<button className={ clsx(facebookButton, socialButton) }>
@@ -154,6 +166,147 @@ const FacebookButton = props => {
 	);
 }
 
+const LoginMessage = props => {
+
+	const { classes } = props;
+
+	const renderMessage = () => {
+		return (
+			<div className={ classes.loginMessage }>
+				{
+					!props.user.loggedIn ? (
+						<>
+							<Icon style={{ width: '50px', height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+								<Error 
+									className={ classes.logInError }
+								/>
+							</Icon>
+							<Typography variant='h5'>Unable To Authenticate</Typography>
+					</>
+					) : (
+						<>
+							<Icon style={{ width: '50px', height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+								<CheckCircle 
+									className={ classes.checkCircle }
+								/>
+							</Icon>
+							<Typography variant='h5'>Log In Successful!</Typography>
+					</>
+					)
+				}
+				<Button
+					size='medium'
+					color='primary'
+					variant='contained'
+					onClick={ e => {
+						props.handleLoginMessage(e);
+						props.handleClose();
+					}}
+				>
+					OK
+				</Button>
+			</div>
+		);
+	}
+
+	return (
+		<Card
+			className={ classes.loginMessageContainer }
+			tabIndex='1'
+		>
+			{
+				props.loginModal.loading === true ? (
+					<CircularProgress />
+				) : (
+					renderMessage()
+				)
+			}
+		</Card>
+	);
+	
+}
+
+const LoginForm = props => {
+
+	const { classes } = props;
+
+	return (
+	<Card 
+		className={ classes.card } 
+		tabIndex='0'
+	>
+
+		<div className={ classes.headerIcon }>
+			<FontAwesomeIcon icon='user-alt' />
+		</div>
+
+		<div className={ classes.closeIconContainer }>
+			<IconButton 
+				size='small'
+				onClick={ props.handleClose }
+			>
+				<Close />
+			</IconButton>
+		</div>
+
+		<div className={ classes.container }>
+
+			<Typography
+				variant='h5'
+				align='center'
+			>
+				Member Login
+			</Typography>
+
+			<div className={ classes.innerContainerOne }>
+				<Email 
+					{ ...props } 
+					handleChange={ props.handleChange }
+					classes={ classes }
+				/>
+				
+				<Password 
+					{ ...props } 
+					handleChange={ props.handleChange }
+					handleShowPassword={ props.handleShowPassword }
+					classes={ classes }
+				/>
+
+				<RememberMe
+					{ ...classes }
+				/>
+			</div>
+
+			<div className={ classes.innerContainerTwo }>
+				<SignInButton 
+					{ ...classes }
+					{ ...props }
+					handleLogin={ props.handleLogin }
+				/>
+				<Options 
+					{ ...classes } 
+				/>
+			</div>
+
+			<div className={ classes.innerContainerThree }>
+
+				<span className={ classes.divider }></span>
+				<Typography className={ classes.dividerContent } variant='subtitle1'>OR</Typography>
+				<span className={ classes.divider }></span>
+
+			</div>
+
+			<div className={ classes.innerContainerFour }>
+				<GoogleButton { ...classes } />
+				<FacebookButton { ...classes } />
+			</div>
+
+		</div>
+	</Card>
+
+	);
+}
+
 class Login extends Component {
 	constructor(props) {
 		super(props);
@@ -161,11 +314,19 @@ class Login extends Component {
 		this.state = {
 			email: {
 				value: '',
+				error: false,
+				helpText: '',
 			},
 			password: {
 				value: '',
 				show: false,
+				error: false,
+				helpText: '',
 			},
+			loginMessage: {
+				open: false,
+				error: false,
+			}
 		};
 
 	}
@@ -174,7 +335,9 @@ class Login extends Component {
 		this.setState({
 			...this.state,
 			[prop]: {
+				...this.state[prop],
 				value: e.target.value,
+				error: false,
 			}
 		});
 	}
@@ -189,85 +352,110 @@ class Login extends Component {
 		});
 	}
 
+	validateInput = () => {
+
+		const emailLength = this.state.email.value.length;
+		const passwordLength = this.state.password.value.length;
+		const emailMinLength = 8;
+		const passMinLength = 6
+
+		if (!(emailLength >= emailMinLength)) {
+
+			this.setState({
+				email: {
+					value: '',
+					error: true,
+				}
+			})
+
+		}
+
+		if (!(passwordLength >= passMinLength)) {
+			this.setState({
+				password: {
+					value: '',
+					error: true,
+				}
+			})
+
+		}
+
+		return (emailLength >= emailMinLength && passwordLength >= passMinLength)
+	}
+
+	handleSubmit = (e, props) => {
+
+		const inputIsValid = this.validateInput();
+		if (inputIsValid === true) {
+			this.props.handleLogin(e, props);
+			this.handleLoginMessage(e);
+		}
+
+	}
+
+	handleClose = e => {
+
+		this.props.handleLoginModal(e);
+
+		this.setState({
+			email: {
+				value: '',
+				error: false,
+				helpText: '',
+			},
+			password: {
+				value: '',
+				show: false,
+				error: false,
+				helpText: '',
+			},
+		});
+	}
+
+	handleLoginMessage = e => {
+		this.setState({
+			loginMessage: {
+				open: !this.state.loginMessage.open,
+			}
+		});
+	}
+
 	render() {
 
 		const { classes } = this.props;
+
+		const renderModal = () => {
+			return (
+				this.state.loginMessage.open === false ? (
+					<LoginForm 
+						{ ...this.props }
+						{ ...this.state }
+						classes={ classes }
+						handleLoginModal={ this.props.handleLoginModal }
+						handleClose={ this.handleClose }
+						handleChange={ this.handleChange }
+						handleShowPassword= { this.handleShowPassword }
+						handleSubmit={ this.handleSubmit }
+					/>
+				) : (
+					<LoginMessage
+						{ ...this.state }
+						{ ...this.props }
+						classes={ classes }
+						handleLoginMessage={ this.handleLoginMessage }
+						handleClose={ this.handleClose }
+					/>
+				)
+			);
+		}
 
 		return (
 			<Modal
 				open={ this.props.loginModal.open }
 				className={ classes.modal }
 			>
-			<Card className={ classes.card }>
-
-				<div className={ classes.headerIcon }>
-					<FontAwesomeIcon icon='user-alt' />
-				</div>
-
-				<div className={ classes.closeIconContainer }>
-					<IconButton 
-						size='small'
-						onClick={ this.props.handleLoginModal }
-					>
-						<Close />
-					</IconButton>
-				</div>
-
-				<div className={ classes.container }>
-
-					<Typography
-						variant='h5'
-						align='center'
-					>
-						Member Login
-					</Typography>
-		
-					<div className={ classes.innerContainerOne }>
-						<Email 
-							{ ...this.state } 
-							handleChange={ this.handleChange }
-							classes={ classes }
-						/>
-						
-						<Password 
-							{ ...this.state } 
-							handleChange={ this.handleChange }
-							handleShowPassword={ this.handleShowPassword }
-							classes={ classes }
-						/>
-
-						<RememberMe
-							{ ...classes }
-						/>
-					</div>
-
-					<div className={ classes.innerContainerTwo }>
-						<SignInButton 
-							{ ...classes }
-							{ ...this.state }
-							handleLogin={ this.props.handleLogin }
-						/>
-						<Options 
-							{ ...classes } 
-						/>
-					</div>
-
-					<div className={ classes.innerContainerThree }>
-
-						<span className={ classes.divider }></span>
-						<Typography className={ classes.dividerContent } variant='subtitle1'>OR</Typography>
-						<span className={ classes.divider }></span>
-
-					</div>
-
-					<div className={ classes.innerContainerFour }>
-						<GoogleButton { ...classes } />
-						<FacebookButton { ...classes } />
-					</div>
-		
-				</div>
-			</Card>
-		</Modal>
+			{ renderModal() }
+			</Modal>
 		);
 	}
 	
