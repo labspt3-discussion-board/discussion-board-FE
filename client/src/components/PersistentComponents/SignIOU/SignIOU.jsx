@@ -7,7 +7,7 @@ export default props => {
   return (
     <div className={classes.signContainer}>
       <SignUp classes={classes}/>
-      <SignIn classes={classes}/>
+      <SignIn classes={classes} handleLoginModal={ props.handleLoginModal } />
     </div>
   )
 }
