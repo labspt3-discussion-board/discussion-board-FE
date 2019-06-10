@@ -180,7 +180,7 @@ class App extends Component {
 
     Axios({
       method: 'get',
-      url: 'https://discussion-board-api-test.herokuapp.com/api/users/',
+      url: 'https://discussion-board-api-test.herokuapp.com/api/',
       withCredentials: true,
     }).then(res => {
       console.log(res)
