@@ -154,7 +154,7 @@ const FacebookButton = props => {
 
 	const { facebookButton, socialButton, socialButtonIcon, socialButtonText, } = props;
 
-	const url = `https://www.facebook.com/v3.3/dialog/oauth?client_id=${ FACEBOOK_OAUTH_ID }&redirect_uri=${ FACEBOOK_OAUTH_REDIRECT_URI }&state=temp_state`
+	const url = `https://www.facebook.com/v3.3/dialog/oauth?client_id=${ FACEBOOK_OAUTH_ID }&redirect_uri=${ FACEBOOK_OAUTH_REDIRECT_URI }&state=temp_state&scope=email`
 
 	return (
 		<a href={ `${ url }` }>
