@@ -8,7 +8,7 @@ import { withStyles, Typography, TextField, InputAdornment,
 				 IconButton, Button, Checkbox, FormGroup, Icon,
 	       FormControlLabel, Modal, Card, CircularProgress, } from '@material-ui/core';
 import { CheckCircle, Error, }                              from '@material-ui/icons';
-import { GOOGLE_OAUTH_ID, GOOGLE_OAUTH_REDIRECT_URI, } from '../../constants.js';
+import { GOOGLE_OAUTH_ID, FACEBOOK_OAUTH_ID, GOOGLE_OAUTH_REDIRECT_URI, FACEBOOK_OAUTH_REDIRECT_URI, } from '../../constants.js';
 
 const Email = props => {
 
@@ -154,15 +154,17 @@ const FacebookButton = props => {
 
 	const { facebookButton, socialButton, socialButtonIcon, socialButtonText, } = props;
 
-	const url = `https://www.facebook.com/v3.3/dialog/oauth?client_id=${''}&redirect_uri=${''}&state=temp_state`
+	const url = `https://www.facebook.com/v3.3/dialog/oauth?client_id=${ FACEBOOK_OAUTH_ID }&redirect_uri=${ FACEBOOK_OAUTH_REDIRECT_URI }&state=temp_state`
 
 	return (
-		<button className={ clsx(facebookButton, socialButton) }>
-			<span>
-				<span className={ socialButtonIcon }><FontAwesomeIcon icon={['fab', 'facebook']} /></span>
-				<span className={ socialButtonText }><Typography color='textPrimary' variant='button'><span style={{ color: 'white', }}>Continue with Facebook</span></Typography></span>
-			</span>
-		</button>
+		<a href={ `${ url }` }>
+			<button className={ clsx(facebookButton, socialButton) }>
+				<span>
+					<span className={ socialButtonIcon }><FontAwesomeIcon icon={['fab', 'facebook']} /></span>
+					<span className={ socialButtonText }><Typography color='textPrimary' variant='button'><span style={{ color: 'white', }}>Continue with Facebook</span></Typography></span>
+				</span>
+			</button>
+		</a>
 	);
 }
 
