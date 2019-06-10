@@ -1,3 +1,4 @@
+import { relative } from "path";
 
 export const styles = {
 	root: {
@@ -26,5 +27,16 @@ export const styles = {
 	button: {
 		width: '200px',
 		margin: 'auto',
+	},
+	buttonProgress: {
+		position: 'absolute',
+    top: '50%',
+    left: '50%',
+	},
+	closeIcon: {
+		position: 'relative',
+		top: '50px',
+		right: '-20px',
+		border: '1px solid black',
 	}
 };
