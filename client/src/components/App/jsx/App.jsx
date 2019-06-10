@@ -86,6 +86,8 @@ class App extends Component {
 			}
 		}).then(res => {
 
+      console.log(res)
+
 			const user = {
 				id:        res.data[0].id,
 				firstName: res.data[0].first_name,
@@ -175,6 +177,15 @@ class App extends Component {
   }
 
   componentDidMount() {
+
+    Axios({
+      method: 'get',
+      url: 'https://discussion-board-api-test.herokuapp.com/api/users/',
+      withCredentials: true,
+    }).then(res => {
+      console.log(res)
+    }).catch(err => console.log(err))
+
 
     if (this.getSearchParams().hasOwnProperty('loggedIn')) {
       const loggedIn = this.getSearchParams()['loggedIn'];
