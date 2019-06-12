@@ -1,19 +1,21 @@
 /* Module will be used for landing page, 
 search results page, subtopic page, etc. 
 Basically whenever a list of discussions need to be displayed*/
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import LazyLoad from 'react-lazyload';
 import {
   withStyles, Card, CardMedia,
   Typography, CircularProgress,
-  Icon, Grid
+  Icon, Grid, IconButton
 } from '@material-ui/core';
 import moment from 'moment';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 import logo from '../../../Assets/images/logo.png';
 import { styles } from './Discussions.style';
+import Votes from '../../Modules/Votes'
 
 import HOST from '../../../Host';
 
@@ -164,11 +166,11 @@ export default withStyles(styles)(props => {
         return (
           <LazyLoad key={index} placeholder={<Loading />}>
             <Card key={index} className={props.classes.discussion}>
-            <CardMedia
-                  className={props.classes.discussionImg}
-                  image={logo}
-                  title="Lambda Logo"
-                />
+              <CardMedia
+                className={props.classes.discussionImg}
+                image={logo}
+                title="Lambda Logo"
+              />
               <div className={props.classes.topDiscussionContainer}>
                 <Typography variant="h6" component="h3" className={props.classes.discussionTitle}>{discussion.title}</Typography>
                 <Typography variant="caption" className={props.classes.subForum}>{`/d/${discussion.subtopic}`}</Typography>
@@ -182,33 +184,20 @@ export default withStyles(styles)(props => {
                   <Typography className={props.classes.commentsNumber}>{discussion.comment_count}</Typography>
                 </Grid>
                 <Grid container justify="center" className={props.classes.votes}>
-                  {/* <Grid container direction="column"> */}
-                  <Icon>arrow_upward</Icon>
-                  {/* {true ?  (discussion) => {
-                    console.log(discussion);
-                    return (
-                      <>
-                        <Typography className={props.classes.netUpvote}>
-                          {Math.abs(discussion.upvote - discussion.downvote)}
-                        </Typography>
-                      </>
-                    )} : <CircularProgress/>
-                    // () => {
-                    // return(
-                    //   <>
-                    //     <Typography className={props.classes.netDownvote}>
-                    //       {Math.abs(discussion.upvote - discussion.downvote)}
-                    //     </Typography>
-                    //   </>
-                    // )}
-                  } */}
-                  <Typography>{discussion.upvote - discussion.downvote}</Typography>
-                  <Icon>arrow_downward</Icon>
-                  {/* </Grid> */}
-                  {/* <div>
-                  <Icon>arrow_downward</Icon>
-                  <Typography>Downvote:{discussion.downvote}</Typography>
-                </div> */}
+                  <Grid container direction="column">
+                    <IconButton>
+                      <Icon>arrow_upward</Icon>
+                    </IconButton>
+                    <Votes
+                      upvote={discussion.upvote}
+                      downvote={discussion.downvote}
+                      netUpvote={props.classes.netUpvote}
+                      netDownvote={props.classes.netDownvote}
+                    />
+                    <IconButton>
+                      <Icon>arrow_downward</Icon>
+                    </IconButton>
+                  </Grid>
                 </Grid>
               </Grid>
             </Card>

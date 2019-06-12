@@ -9,8 +9,6 @@ import { withStyles, Icon, Grid, IconButton, Avatar } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import logo from '../../../Assets/images/logo.png';
 
-const DEV_HOST = 'http://localhost:8000';
-const HOST = 'https://discussion-board-api.herokuapp.com/'
 
 
 export default withStyles(styles)(props => {
