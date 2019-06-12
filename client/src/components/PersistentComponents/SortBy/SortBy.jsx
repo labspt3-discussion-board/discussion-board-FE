@@ -12,102 +12,90 @@ const SortBy = props => {
   const [discussionList, updateDiscussionList] = useGlobal('discussionList');
 
   // Function that runs on each render and sorts list based on chosen option
+
+  //UseEffect that will only run at beginning and automatically sort by recent
+  //Might have to put this wherever I make the calls for the data
   // useEffect(() => {
-  //   if (filter === "Recent") {
+  //   let sortedList = [];
 
-  //   } else if (filter === "Upvote") {
+  //     function recentSort(a, b) {
+  //       const dateA = new Date(a.created_at);
+  //       const dateB = new Date(b.created_at);
 
-  //   } else if (filter === "Comments") {
-  //     let commentsNumberList = [];
-  //     let sortedList = [];
-  //     let copyList = [...discussionList];
+  //       let comparison = 0;
 
-  //     for (let i = 0; i < discussionList.length; i++) {
-  //       commentsNumberList.push(discussionList[i].commentsNumber)
-  //     }
-  //     commentsNumberList = commentsNumberList.sort((a, b) => b - a)
-  //     console.log(commentsNumberList);
-
-  //     for (let n = 0; sortedList.length !== discussionList.length; n++) {
-  //       for (let i = 0; i < discussionList.length; i++) {
-  //         if (discussionList[i].commentsNumber === commentsNumberList[n]) {
-  //           sortedList.push(discussionList[i]);
-  //         } else {
-  //         }
+  //       if (dateA < dateB) {
+  //         comparison = 1;
+  //       } else if (dateA > dateB) {
+  //         comparison = -1;
   //       }
+  //       return comparison;
   //     }
-  //     console.log(sortedList)
-  //   }
-  // })
+  //     sortedList = discussionList.sort(recentSort);
+  //     updateDiscussionList(sortedList);
+  // }, [])
 
-  // useEffect(()=> {
-  //   updateDiscussionList(sortedList);
-  //   sortedList = [];
-  // })
 
   const handleSortBy = e => {
     const currentSortBy = e.target.value;
-    console.log(filter)
-    updateFilter(currentSortBy);
-    console.log(filter)
-    console.log(discussionList)
-
-    //Condition allows for avoiding redundant updating of state if clicking on the same sort option.
 
     if (currentSortBy === "Recent") {
-      console.log(discussionList)
-    } else if (currentSortBy === "Upvote") {
-      let upvotesNumberList = [];
       let sortedList = [];
 
-      for (let i = 0; i < discussionList.length; i++) {
-        upvotesNumberList.push(discussionList[i].upvote)
-      }
-      console.log(`before ${upvotesNumberList}`)
+      function recentSort(a, b) {
+        const dateA = new Date(a.created_at);
+        const dateB = new Date(b.created_at);
 
-      upvotesNumberList = upvotesNumberList.sort((a, b) => b - a)
-      console.log(`after ${upvotesNumberList}`)
+        let comparison = 0;
 
-      for (let n = 0; sortedList.length !== discussionList.length; n++) {
-        for (let i = 0; i < discussionList.length; i++) {
-          if (discussionList[i].upvote === upvotesNumberList[n]) {
-            sortedList.push(discussionList[i])
-          } else {
-
-          }
+        if (dateA < dateB) {
+          comparison = 1;
+        } else if (dateA > dateB) {
+          comparison = -1;
         }
+        return comparison;
       }
+      sortedList = discussionList.sort(recentSort);
+      updateDiscussionList(sortedList);
 
+    } else if (currentSortBy === "Upvote") {
+
+      let sortedList = [];
+
+      function votesSort(a, b) {
+        const votesA = a.upvote - a.downvote;
+        const votesB = b.upvote - b.downvote;
+
+        let comparison = 0;
+
+        if (votesA < votesB) {
+          comparison = 1;
+        } else if (votesA > votesB) {
+          comparison = -1;
+        }
+        return comparison;
+      }
+      sortedList = discussionList.sort(votesSort);
       updateDiscussionList(sortedList);
 
     } else if (currentSortBy === "Comments") {
-      let commentsSortList = [];
       let sortedList = [];
 
-      // for (let i = 0; i < discussionList.length; i++) {
-      //   commentsSortList.push(discussionList[i].comment_count)
-      // }
-      // commentsSortList = commentsSortList.sort((a, b) => b - a)
-      console.log(commentsSortList);
-
-      function commentsSort(a,b){
+      function commentsSort(a, b) {
         const commentsA = a.comment_count;
         const commentsB = b.comment_count;
 
         let comparison = 0;
 
-        if(commentsA < commentsB){
+        if (commentsA < commentsB) {
           comparison = 1;
-        }else if(commentsA > commentsB){
+        } else if (commentsA > commentsB) {
           comparison = -1;
         }
         return comparison;
       }
-
       sortedList = discussionList.sort(commentsSort);
-
       updateDiscussionList(sortedList);
-
     }
   }
 
@@ -116,15 +104,15 @@ const SortBy = props => {
 
 
 
-return (
-  <div>
-    <NativeSelect className={props.classes.sortBy} onChange={(e) => handleSortBy(e)}>
-      <option value="Recent">Recent</option>
-      <option value="Upvote">Upvote</option>
-      <option value="Comments">Comments</option>
-    </NativeSelect>
-  </div>
-)
+  return (
+    <div>
+      <NativeSelect className={props.classes.sortBy} onChange={(e) => handleSortBy(e)}>
+        <option value="Recent">Recent</option>
+        <option value="Upvote">Upvote</option>
+        <option value="Comments">Comments</option>
+      </NativeSelect>
+    </div>
+  )
 }
 
 export default SortBy;
