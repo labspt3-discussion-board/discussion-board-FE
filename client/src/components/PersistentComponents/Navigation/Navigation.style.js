@@ -16,10 +16,19 @@ export const styles = {
   },
   searchBar: {
     color: 'white',
-    borderBottom: '1px solid white',
-    
+    borderBottom: '1px solid white'
   },
   signShared:{
     color: 'white'
+  },
+  navigationHome:{
+    // border: '1px solid black',
+  },
+  Logo: {
+  },
+  navButtons:{
+    // border: '1px solid black',
+    width: '8%',
+    marginLeft: '40px'
   }
 };

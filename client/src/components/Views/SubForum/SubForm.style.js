@@ -1,5 +1,18 @@
-
 export const styles = {
+  subForumContainer: {
+    // display: 'flex',
+    // flexWrap: 'wrap',
+    // border: '1px solid black',
+    // margin: '0px auto'
+    margin: '100px auto 0px',
+    // border: '1px solid black',
+  },
+  subForumTop:{
+    width: '90%',
+    margin: '0px auto 20px',
+    paddingBottom: '25px',
+    borderBottom: '2px solid grey'
+  },
   discussionsContainer: {
     // border: '2px solid black',
     width: '60%',
@@ -40,7 +53,7 @@ export const styles = {
     margin: '10px 5%',
     width: '100%',
     lineHeight: '1.2',
-    // border: '1px solid navy',
+    border: '1px solid navy',
     borderRadius: '4px'
   }, 
   discussionTitle: {
@@ -75,4 +88,4 @@ export const styles = {
   failedLoading:{
     margin: '0px auto'
   }
-};
+}

@@ -5,7 +5,9 @@ import Typography from '@material-ui/core/Typography';
 import { styles } from './Navigation.style.js';
 import SearchBar from '../SearchBar/SearchBar';
 import SignIOU from '../SignIOU/SignIOU';
-import { withStyles } from '@material-ui/core';
+import { withStyles, Icon, Grid, IconButton, Avatar } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import logo from '../../../Assets/images/logo.png';
 
 const DEV_HOST = 'http://localhost:8000';
 const HOST = 'https://discussion-board-api.herokuapp.com/'
@@ -18,12 +20,26 @@ export default withStyles(styles)(props => {
   return (
     // <div className={props.classes.navigationContainer}>
 
-    <AppBar className={classes.appBar} position="static">
+    <AppBar className={classes.appBar} >
       <Toolbar className={classes.navigationContainer}>
-        <Typography variant="h6" color="inherit">
-          Lambda Forum
+        <Grid  container justify="space-between" alignItems="center" className={classes.navButtons}>
+        <IconButton>
+          <Icon>menu</Icon>
+        </IconButton>
+        {/* <Grid container> */}
+        <Link className={classes.navigationHome} to="/">
+          <div className="Logo">
+            <Avatar alt="Lambda Logo" src={logo}/>
+            {/* <img src="https://pbs.twimg.com/profile_images/1119017796954808322/F1pUmZtW.png" alt="Lambda" /> */}
+          </div>
+          {/* <Icon>home</Icon> */}
+          {/* <Typography variant="h5" component="h1" color="inherit">
+              Lambda Forum */}
           {/* <img src="../../../../public/images/LambdaLogo.png"/> */}
-      </Typography>
+          {/* </Typography> */}
+        </Link>
+        </Grid>
+        {/* </Grid> */}
         <SearchBar classes={classes} />
         <SignIOU classes={classes} />
       </Toolbar>

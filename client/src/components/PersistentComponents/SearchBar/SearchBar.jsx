@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-// Use of Material ui is a stretch goal right now, focus on finishing
-// core functions first
-// import Input               from '@material-ui/core/Input';
 //refactor with async/await, more hook knowledge
 import axios from 'axios';
 import Input from '@material-ui/core/Input';
+import { withRouter } from 'react-router-dom';
 
 const HOST = 'https://discussion-board-api.herokuapp.com/'
 
 
-export default props => {
+export default withRouter(props => {
   const [searchValue, updateSearchValue] = useState('');
 
   const handleInputChange = (e) => {
@@ -23,6 +21,9 @@ export default props => {
     console.log('yo')
     //line is meant for use in axios res scope
     updateSearchValue('')
+    props.history.push("/searchResults")
+
+
 
     // axios.get(`${ HOST }api/create-user/`)
     // // :${searchValue}
@@ -47,4 +48,4 @@ export default props => {
       {/* <input type="submit" onClick={(e) => handleSubmit(e)}/> */}
     </div>
   )
-}
+});

@@ -1,4 +1,3 @@
-
 export const styles = {
   discussionsContainer: {
     // border: '2px solid black',
@@ -44,35 +43,50 @@ export const styles = {
     borderRadius: '4px'
   }, 
   discussionTitle: {
-    fontWeight: 'bold',
-    fontSize: '20px'
   },
-  subtopic: {
-    fontWeight: 'bold',
-    fontSize: '12px'
+  subForum: {
+    color: 'black'
   },
   comments: {
-    display: 'flex',
-    flexDirection: 'column',
-    // border: '1px solid black'
+
   },
   commentsNumber: {
-    alignSelf: 'center',
     margin: '10px auto',
     fontWeight: 'bold',
     fontSize: '20px'
   },
   topDiscussionContainer: {
-    width: '80%'
+    width: '75%',
+    // border: '1px solid blue',
+    margin: '0px',
   },
   votes: {
-    display: 'flex',
+    // display: 'flex',
     // border: '1px solid black',
-    alignSelf: 'baseline',
-    width: '100%',
-    justifyContent: 'space-between'
+    // alignSelf: 'baseline',
+    // width: '100%',
+    // justifyContent: 'space-between'
   },
   failedLoading:{
     margin: '0px auto'
+  },
+  netUpvote:{
+    color: 'green'
+  },
+  netDownvote: {
+    color: 'red'
+  },
+  rightContainer:{
+    // border: '1px solid red',
+    width: '10%'
+  },
+  postLoading:{
+    backgroundColor: 'red'
+  },
+  discussionImg:{
+    borderRadius: '4px',
+    height: '120px',
+    width: '15%',
+    margin: '0px'
   }
 };

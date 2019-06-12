@@ -1,26 +1,34 @@
-import React, { useState, useEffect } from 'react';
+/* Module will be used for landing page, 
+search results page, subtopic page, etc. 
+Basically whenever a list of discussions need to be displayed*/
+import React from 'react';
 import { useGlobal } from 'reactn';
-import axios from 'axios';
-import moment from 'moment';
 import LazyLoad from 'react-lazyload';
-import { Typography, Icon, CircularProgress } from '@material-ui/core'
+import {
+  withStyles, Card, CardMedia,
+  Typography, CircularProgress,
+  Icon, Grid
+} from '@material-ui/core';
+import moment from 'moment';
+import axios from 'axios';
+
+import logo from '../../../Assets/images/logo.png';
+import { styles } from './Discussions.style';
 
 import HOST from '../../../Host';
 
 const Loading = () => {
   return (
-    <div>
+    <div className="postLoading">
       <h5>Loading...</h5>
     </div>
   )
 }
 
-export default props => {
-
+export default withStyles(styles)(props => {
   const [discussionList, updateDiscussionList] = useGlobal('discussionList');
-  console.log(discussionList)
 
-//Axios call for discussion data from database
+  //Axios call for discussion data from database
   // useEffect(() => {
   //   //List of discussions
   //   // axios.get(`${HOST}api/discussions/`)
@@ -151,41 +159,66 @@ export default props => {
   // }, [discussionList])
 
   return (
-    <div className={props.classes.topDiscussions}>
+    <>
       {discussionList ? discussionList.map((discussion, index) => {
         return (
-          <LazyLoad key={index}>
-            <div key={index} className={props.classes.discussion}>
+          <LazyLoad key={index} placeholder={<Loading />}>
+            <Card key={index} className={props.classes.discussion}>
+            <CardMedia
+                  className={props.classes.discussionImg}
+                  image={logo}
+                  title="Lambda Logo"
+                />
               <div className={props.classes.topDiscussionContainer}>
-                <Typography className={props.classes.discussionTitle}>{discussion.title}</Typography>
-                <Typography className={props.classes.subtopic}>{`/d/${discussion.subtopic}`}</Typography>
+                <Typography variant="h6" component="h3" className={props.classes.discussionTitle}>{discussion.title}</Typography>
+                <Typography variant="caption" className={props.classes.subForum}>{`/d/${discussion.subtopic}`}</Typography>
                 {/* switch back to ownerName */}
-                <Typography>{`${discussion.ownerName} - ${discussion.created_at}`}</Typography>
+                <Typography variant="body" >{`${discussion.ownerName} - ${moment(discussion.created_at).fromNow()}`}</Typography>
                 <Typography>{discussion.description}</Typography>
               </div>
-              <div className={props.classes.comments}>
-                <Typography>Comments</Typography>
-                <Typography className={props.classes.commentsNumber}>{discussion.comment_count}</Typography>
-              </div>
-              <div className={props.classes.votes}>
-                <div>
+              <Grid container direction="column" className={props.classes.rightContainer}>
+                <Grid container direction="column" justify="center" className={props.classes.comments}>
+                  <Typography>Comments</Typography>
+                  <Typography className={props.classes.commentsNumber}>{discussion.comment_count}</Typography>
+                </Grid>
+                <Grid container justify="center" className={props.classes.votes}>
+                  {/* <Grid container direction="column"> */}
                   <Icon>arrow_upward</Icon>
-                  <Typography>{discussion.upvote}</Typography>
-                </div>
-                <div>
+                  {/* {true ?  (discussion) => {
+                    console.log(discussion);
+                    return (
+                      <>
+                        <Typography className={props.classes.netUpvote}>
+                          {Math.abs(discussion.upvote - discussion.downvote)}
+                        </Typography>
+                      </>
+                    )} : <CircularProgress/>
+                    // () => {
+                    // return(
+                    //   <>
+                    //     <Typography className={props.classes.netDownvote}>
+                    //       {Math.abs(discussion.upvote - discussion.downvote)}
+                    //     </Typography>
+                    //   </>
+                    // )}
+                  } */}
+                  <Typography>{discussion.upvote - discussion.downvote}</Typography>
                   <Icon>arrow_downward</Icon>
-                <Typography>Downvote:{discussion.downvote}</Typography>
-                </div>
-              </div>
-            </div>
+                  {/* </Grid> */}
+                  {/* <div>
+                  <Icon>arrow_downward</Icon>
+                  <Typography>Downvote:{discussion.downvote}</Typography>
+                </div> */}
+                </Grid>
+              </Grid>
+            </Card>
           </LazyLoad>
         )
-      }) : <CircularProgress/>}
-      {discussionList.length === 0 ? 
-      <div>
-        <CircularProgress className={props.classes.failedLoading}color="secondary"/>
+      }) : <CircularProgress />}
+      {discussionList.length === 0 ?
+        <div>
+          <CircularProgress className={props.classes.failedLoading} color="secondary" />
         </div> : null}
-
-    </div>
+    </>
   )
-};
+})

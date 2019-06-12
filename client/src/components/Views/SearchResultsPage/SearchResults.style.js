@@ -39,9 +39,7 @@ export const styles = {
     justifyContent: 'space-between',
     margin: '10px 5%',
     width: '100%',
-    lineHeight: '1.2',
-    // border: '1px solid navy',
-    borderRadius: '4px'
+    lineHeight: '1.2'
   }, 
   discussionTitle: {
     fontWeight: 'bold',
@@ -67,12 +65,21 @@ export const styles = {
   },
   votes: {
     display: 'flex',
-    // border: '1px solid black',
+    border: '1px solid black',
     alignSelf: 'baseline',
     width: '100%',
     justifyContent: 'space-between'
   },
-  failedLoading:{
-    margin: '0px auto'
+  searchTitle:{
+    fontSize: '30px',
+    margin: '80px auto 0px',
+    width: '100%',
+    // border: '1px solid black',
+    textAlign: 'center',
+  },
+  searchResultsContainer: {
+    // border: '1px solid black',
+    display: 'flex',
+    flexWrap: 'wrap'
   }
 };
