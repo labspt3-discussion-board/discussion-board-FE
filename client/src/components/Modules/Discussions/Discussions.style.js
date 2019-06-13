@@ -59,6 +59,9 @@ export const styles = {
     width: '75%',
     // border: '1px solid blue',
     margin: '0px',
+    display: 'flex',
+    flexDirection: 'column',
+    lineHeight: '30px'
   },
   votes: {
     // display: 'flex',

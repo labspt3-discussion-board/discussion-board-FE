@@ -159,6 +159,26 @@ export default withStyles(styles)(props => {
   //       console.log(err)
   //     })
   // }, [discussionList])
+  const handleVote = (e) => {
+    const vote = e.target.name;
+
+    //Going to separate into its own file.
+
+    //axios call to add to upvote/downvote
+    
+  //   axios.put(`${HOST}api/topdiscussions/`)
+  //     .then(res => {
+  //       console.log(res.data)
+  //       updateDiscussionList(res.data)
+  //     }).catch(err => {
+  //       console.log(err);
+  //     })
+
+    //axios call to update discussion state
+    //Will update state specific to current view by passing in a prop string
+    //that will identify current view being used and then set up conditionals
+    //to initiate correct axios call. ex. top discussions vs subForum discussions
+  }
 
   return (
     <>
@@ -173,9 +193,9 @@ export default withStyles(styles)(props => {
               />
               <div className={props.classes.topDiscussionContainer}>
                 <Typography variant="h6" component="h3" className={props.classes.discussionTitle}>{discussion.title}</Typography>
-                <Typography variant="caption" className={props.classes.subForum}>{`/d/${discussion.subtopic}`}</Typography>
+                <Typography variant="caption" className={props.classes.subForum}>{`/f/${discussion.subtopic}`}</Typography>
                 {/* switch back to ownerName */}
-                <Typography variant="body" >{`${discussion.ownerName} - ${moment(discussion.created_at).fromNow()}`}</Typography>
+                <Typography variant="body" >{` Posted by ${discussion.ownerName} - ${moment(discussion.created_at).fromNow()}`}</Typography>
                 <Typography>{discussion.description}</Typography>
               </div>
               <Grid container direction="column" className={props.classes.rightContainer}>
@@ -185,7 +205,7 @@ export default withStyles(styles)(props => {
                 </Grid>
                 <Grid container justify="center" className={props.classes.votes}>
                   <Grid container direction="column">
-                    <IconButton>
+                    <IconButton name="upVote" onClick={(e)=> {handleVote(e)}}>
                       <Icon>arrow_upward</Icon>
                     </IconButton>
                     <Votes
@@ -194,7 +214,7 @@ export default withStyles(styles)(props => {
                       netUpvote={props.classes.netUpvote}
                       netDownvote={props.classes.netDownvote}
                     />
-                    <IconButton>
+                    <IconButton name="downVote" onClick={(e)=> {handleVote(e)}}>
                       <Icon>arrow_downward</Icon>
                     </IconButton>
                   </Grid>
