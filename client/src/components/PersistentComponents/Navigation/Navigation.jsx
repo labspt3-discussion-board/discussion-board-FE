@@ -6,8 +6,8 @@ import Typography from '@material-ui/core/Typography';
 import { styles } from './Navigation.style.js';
 import SearchBar from '../SearchBar/SearchBar';
 import SignIOU from '../SignIOU/SignIOU';
-import { withStyles, IconButton, Menu, MenuItem, ClickAwayListener, } from '@material-ui/core';
-import { AccountCircle, } from '@material-ui/icons';
+import { withStyles, IconButton, Menu, MenuItem, Tooltip  } from '@material-ui/core';
+import { AccountCircle, NoteAdd, } from '@material-ui/icons';
 import { NavLink } from 'react-router-dom'
 import Axios from 'axios';
 import Cookies from 'js-cookie';
@@ -133,7 +133,7 @@ class Navigation extends Component {
 
     const renderNavOptions = () => {
       return !this.props.user.loggedIn ? (
-        <div className={ classes.containerRight }>
+        <div className={ classes.containerRightOne }>
           <LoginLink 
             handleLoginModal={ this.props.handleLoginModal } 
             classes={ classes }
@@ -141,18 +141,30 @@ class Navigation extends Component {
           <SignUpButton classes={ classes } />
         </div>
       ) : (
-        <>
-          <IconButton
-            id='navigation-account-menu-button'
-            edge="end"
-            aria-owns={this.state.accountMenu.anchorEl ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            color="inherit"
-            onClick={ this.handleAccountMenuOpen }
-          >
-            <AccountCircle />
-          </IconButton>
-        </>
+        <div className={ classes.containerRightTwo }>
+
+          <Tooltip title='New Subforum'>
+            <IconButton
+              color="inherit"
+              onClick={ e => this.props.handleModalOpen(e, 'newSubforumModal') }
+            >
+              <NoteAdd />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title='Account Menu'>
+            <IconButton
+              id='navigation-account-menu-button'
+              edge="end"
+              aria-owns={this.state.accountMenu.anchorEl ? 'account-menu' : undefined}
+              aria-haspopup="true"
+              color="inherit"
+              onClick={ this.handleAccountMenuOpen }
+            >
+              <AccountCircle />
+            </IconButton>
+          </Tooltip>
+        </div>
       )
     }
 

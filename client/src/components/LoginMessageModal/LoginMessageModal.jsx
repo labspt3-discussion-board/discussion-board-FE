@@ -8,6 +8,7 @@ const LoginMessageModal = props => {
 	const { classes } = props;
 
 	const renderMessage = () => {
+
 		return (
 			<div className={ classes.loginMessage }>
 				{

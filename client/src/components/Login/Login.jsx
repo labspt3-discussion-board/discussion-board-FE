@@ -1,13 +1,12 @@
 import React, { Component, useState, }        					    from 'react';
 import PropTypes                              					    from 'prop-types';
-import { FontAwesomeIcon } 										              from '@fortawesome/react-fontawesome'
-import clsx													                        from 'clsx';
-import { Visibility, VisibilityOff, Close, }  							        from '@material-ui/icons';
+import { FontAwesomeIcon } 										    from '@fortawesome/react-fontawesome'
+import clsx													        from 'clsx';
+import { Visibility, VisibilityOff, Close, CheckCircle, Error,}     from '@material-ui/icons';
 import { styles, }                            					    from './Login.style.js';
 import { withStyles, Typography, TextField, InputAdornment, 
-				 IconButton, Button, Checkbox, FormGroup, Icon,
-	       FormControlLabel, Modal, Card, CircularProgress, } from '@material-ui/core';
-import { CheckCircle, Error, }                              from '@material-ui/icons';
+		 IconButton, Button, Checkbox, FormGroup, Icon,
+         FormControlLabel, Modal, Card, CircularProgress, }         from '@material-ui/core';
 import { GOOGLE_OAUTH_ID, FACEBOOK_OAUTH_ID, GOOGLE_OAUTH_REDIRECT_URI, FACEBOOK_OAUTH_REDIRECT_URI, } from '../../constants.js';
 
 const Email = props => {
