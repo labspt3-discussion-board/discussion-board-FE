@@ -1,14 +1,16 @@
 import React, { Component, }                           from 'react';
 import CssBaseline                                     from '@material-ui/core/CssBaseline';
-import { TestComponent, Login, Register, LandingPage,
-         Navigation, LoginMessageModal, }              from '../../components.js';
+import { Login, Register, LandingPage,
+         Navigation, LoginMessageModal, 
+         NewSubforumModal,
+         }              from '../components.js';
 import { library }                                     from '@fortawesome/fontawesome-svg-core';
 import { faSignInAlt, faUserAlt, }                     from '@fortawesome/free-solid-svg-icons';
 import { fab, }                                        from '@fortawesome/free-brands-svg-icons';
 import { BrowserRouter as Router, Route, Link }        from "react-router-dom";
 import Cookies                                         from 'js-cookie';
 import Axios                                           from 'axios';
-import { HOST, }                                       from '../../../constants.js';
+import { HOST, }                                       from '../../constants.js';
 
 library.add(faSignInAlt, faUserAlt, fab);
 
@@ -31,6 +33,9 @@ class App extends Component {
         loading: true,
       },
       loginMessageModal: {
+        open: false,
+      },
+      newSubforumModal: {
         open: false,
       }
     };
@@ -73,7 +78,7 @@ class App extends Component {
     });
   }
 
-  handleLogin = (e, formData, cb) => {
+  handleLogin = (e, formData) => {
 		e.preventDefault();
 
 		Axios({
@@ -178,15 +183,6 @@ class App extends Component {
 
   componentDidMount() {
 
-    Axios({
-      method: 'get',
-      url: 'https://discussion-board-api-test.herokuapp.com/api/',
-      withCredentials: true,
-    }).then(res => {
-      console.log(res)
-    }).catch(err => console.log(err))
-
-
     if (this.getSearchParams().hasOwnProperty('loggedIn')) {
       const loggedIn = this.getSearchParams()['loggedIn'];
 
@@ -226,20 +222,34 @@ class App extends Component {
 
   }
 
+  handleModalOpen = (e, name) => {
+    this.setState({
+      [name]: {
+        open: !this.state[name].open
+      }
+    })
+  }
+
   render() {
     return (
       <Router>
         <CssBaseline />
 
-        <LoginMessageModal
-          { ...this.state}
-          handleLoginMessageModal={ this.handleLoginMessageModal }
-        />
-
         <Navigation
           { ...this.state }
           handleLoginModal={ this.handleLoginModal }
           setUserState={ this.setUserState }
+          handleModalOpen={ this.handleModalOpen }
+        />
+
+        <LoginMessageModal
+          { ...this.state }
+          handleLoginMessageModal={ this.handleLoginMessageModal }
+        />
+
+        <NewSubforumModal 
+          { ...this.state }
+          handleModalOpen={ this.handleModalOpen }
         />
 
         <Login 

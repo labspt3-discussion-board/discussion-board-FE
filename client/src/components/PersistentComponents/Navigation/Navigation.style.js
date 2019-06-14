@@ -10,12 +10,19 @@ export const styles = {
     justifyContent: 'space-between',
     // border: '1px solid blue'
   },
-  containerRight: {
+  containerRightOne: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     // border: '1px solid black',
     width: '160px',
+  },
+  containerRightTwo: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // border: '1px solid black',
+    width: '110px',
   },
   signContainer: {
     display: 'flex',
@@ -26,7 +33,7 @@ export const styles = {
     borderBottom: '1px solid white',
     
   },
-  signShared:{
+  signShared: {
     color: 'white'
   },
   loginLink: {
