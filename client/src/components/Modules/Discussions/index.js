@@ -21,9 +21,9 @@ import HOST from '../../../Host';
 
 const Loading = () => {
   return (
-    <div className="postLoading">
-      <h5>Loading...</h5>
-    </div>
+    <>
+      <p>Loading..</p>
+    </>
   )
 }
 
@@ -31,46 +31,86 @@ export default withStyles(styles)(props => {
   const [discussionList, updateDiscussionList] = useGlobal('discussionList');
 
   //Axios call for discussion data from database
-  // useEffect(() => {
-  //   //List of discussions
-  //   // axios.get(`${HOST}api/discussions/`)
-  //   //   .then(res => {
-  //   //     console.log(res.data)
-  //   //     updateDiscussionList(res.data);
-  //   //   }).catch(err => {
-  //   //     console.log(err);
-  //   //   });
+  useEffect(() => {
+    //List of discussions
+    // axios.get(`${HOST}api/discussions/`)
+    //   .then(res => {
+    //     console.log(res.data)
+    //     updateDiscussionList(res.data);
+    //   }).catch(err => {
+    //     console.log(err);
+    //   });
+      axios.get(`${HOST}api/${props.discListType}/`)
+        .then(res => {
+          console.log(res.data.slice(0, 10))
+          updateDiscussionList(res.data.slice(0, 10))
+        }).catch(err => {
+          console.log(err);
+        });
 
-  //   axios.get(`${HOST}api/topdiscussions/`)
-  //     .then(res => {
-  //       console.log(res.data)
-  //       updateDiscussionList(res.data)
-  //     }).catch(err => {
-  //       console.log(err);
-  //     })
-
-  //   /* Comments model doesn't currently store any info on number
-  //   of comments per discussion. Implement once I can get that
-  //   info
-  //   axios.get(`${HOST}api/comments/`)
-  //   .then(res => {
-  //     console.log(res)
-  //   }).catch(err => {
-  //     console.log(err)
-  //   });*/
+    /* Comments model doesn't currently store any info on number
+    of comments per discussion. Implement once I can get that
+    info
+    axios.get(`${HOST}api/comments/`)
+    .then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.log(err)
+    });*/
 
 
-  //   // //Need to get users and subtopics 
-  //   // // by respective ids to get thier info for display
+    // //Need to get users and subtopics 
+    // // by respective ids to get thier info for display
 
-  //   //subtopic
-  //   // axios.get(`${HOST}api/subtopics/`)
-  //   // .then(res => {
-  //   //   console.log(res)
-  //   // }).catch(err => {
-  //   //   console.log(err)
-  //   // })
-  // }, [])
+    //subtopic
+    // axios.get(`${HOST}api/subtopics/`)
+    // .then(res => {
+    //   console.log(res)
+    // }).catch(err => {
+    //   console.log(err)
+    // })
+  }, [])
+
+  useEffect(()=> {
+    axios.get(`${HOST}api/users/`)
+      .then(res => {
+        console.log(res.data)
+        let userList = res.data;
+        let discussionOwner = discussionList;
+
+        for (let n = 0; n < userList.length; n++) {
+
+          for (let i = 0; i < discussionOwner.length; i++) {
+            if (discussionOwner[i]['owner'] === userList[n]['id']) {
+              discussionOwner[i].ownerName = userList[n]['username'];
+            }
+          }
+        }
+        updateDiscussionList(discussionOwner)
+      }).catch(err => {
+        console.log(err)
+      });
+
+      axios.get(`${HOST}api/subforums/`)
+      .then(res => {
+        console.log(res.data)
+        let subForumsList = res.data;
+        let discussionSubForums = discussionList;
+
+        for (let n = 0; n < subForumsList.length; n++) {
+
+          for (let i = 0; i < discussionSubForums.length; i++) {
+            if (discussionSubForums[i]['subforum'] === subForumsList[n]['id']) {
+              discussionSubForums[i].subForumName = subForumsList[n]['name'];
+            }
+          }
+        }
+        updateDiscussionList(discussionSubForums)
+      }).catch(err => {
+        console.log(err)
+      });
+
+  },[discussionList]);
 
   // let counter = 0;
 
@@ -159,20 +199,29 @@ export default withStyles(styles)(props => {
   //       console.log(err)
   //     })
   // }, [discussionList])
+
+
   const handleVote = (e) => {
     const vote = e.target.name;
+    console.log(e.target.color)
+
+    if (vote === 'upvote') {
+      // axios.put(`${HOST}api/discussions/`)
+    } else {
+
+    }
 
     //Going to separate into its own file.
 
     //axios call to add to upvote/downvote
-    
-  //   axios.put(`${HOST}api/topdiscussions/`)
-  //     .then(res => {
-  //       console.log(res.data)
-  //       updateDiscussionList(res.data)
-  //     }).catch(err => {
-  //       console.log(err);
-  //     })
+
+    //   axios.put(`${HOST}api/topdiscussions/`)
+    //     .then(res => {
+    //       console.log(res.data)
+    //       updateDiscussionList(res.data)
+    //     }).catch(err => {
+    //       console.log(err);
+    //     })
 
     //axios call to update discussion state
     //Will update state specific to current view by passing in a prop string
@@ -182,7 +231,7 @@ export default withStyles(styles)(props => {
 
   return (
     <>
-      {discussionList ? discussionList.map((discussion, index) => {
+      {discussionList.length !== 0 ? discussionList.map((discussion, index) => {
         return (
           <LazyLoad key={index} placeholder={<Loading />}>
             <Card key={index} className={props.classes.discussion}>
@@ -193,7 +242,7 @@ export default withStyles(styles)(props => {
               />
               <div className={props.classes.topDiscussionContainer}>
                 <Typography variant="h6" component="h3" className={props.classes.discussionTitle}>{discussion.title}</Typography>
-                <Typography variant="caption" className={props.classes.subForum}>{`/f/${discussion.subtopic}`}</Typography>
+                <Typography variant="caption" className={props.classes.subForum}>{`/f/${discussion.subForumName}`}</Typography>
                 {/* switch back to ownerName */}
                 <Typography variant="body" >{` Posted by ${discussion.ownerName} - ${moment(discussion.created_at).fromNow()}`}</Typography>
                 <Typography>{discussion.description}</Typography>
@@ -205,7 +254,9 @@ export default withStyles(styles)(props => {
                 </Grid>
                 <Grid container justify="center" className={props.classes.votes}>
                   <Grid container direction="column">
-                    <IconButton name="upVote" onClick={(e)=> {handleVote(e)}}>
+                    {/* Add conditional to make one button have color based on
+                    whether user voted */}
+                    <IconButton className={props.classes.upvoteBtn} name="upvote" onClick={(e) => { handleVote(e) }}>
                       <Icon>arrow_upward</Icon>
                     </IconButton>
                     <Votes
@@ -214,7 +265,7 @@ export default withStyles(styles)(props => {
                       netUpvote={props.classes.netUpvote}
                       netDownvote={props.classes.netDownvote}
                     />
-                    <IconButton name="downVote" onClick={(e)=> {handleVote(e)}}>
+                    <IconButton className={props.classes.downvoteBtn} name="downvote" onClick={(e) => { handleVote(e) }}>
                       <Icon>arrow_downward</Icon>
                     </IconButton>
                   </Grid>
@@ -223,11 +274,11 @@ export default withStyles(styles)(props => {
             </Card>
           </LazyLoad>
         )
-      }) : <CircularProgress />}
-      {discussionList.length === 0 ?
-        <div>
-          <CircularProgress className={props.classes.failedLoading} color="secondary" />
-        </div> : null}
+      }) :
+        <Grid container className={props.classes.loading} justify="center" alignItems="center" >
+          <CircularProgress color="secondary" />
+        </Grid>
+      }
     </>
   )
 })

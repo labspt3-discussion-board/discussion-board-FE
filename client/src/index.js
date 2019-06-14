@@ -90,7 +90,8 @@ const dummyData = [{
 }];
 
 setGlobal({
-  discussionList: dummyData
+  discussionList: []
+  // dummyData
 });
 
 ReactDOM.render(

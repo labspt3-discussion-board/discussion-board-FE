@@ -15,7 +15,7 @@ function App() {
       <CssBaseline />
       <Route path="/" component={Navigation}/>
       <Route exact path="/" component={LandingPage}/>
-      <Route exact path="/searchResults" component={SearchResultsPage}/>
+      <Route exact path="/searchResults/:id" component={SearchResultsPage}/>
       <Route exact path="/subForum/:id" component={SubForum}/>
       <Route exact path="/subtopic/createPost"/>
       <Route exact path="/account/:id/settings"/>

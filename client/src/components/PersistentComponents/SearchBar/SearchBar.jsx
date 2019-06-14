@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Input from '@material-ui/core/Input';
 import { withRouter } from 'react-router-dom';
+import { useGlobal } from 'reactn';
 
 const HOST = 'https://discussion-board-api.herokuapp.com/'
 
 
 export default withRouter(props => {
   const [searchValue, updateSearchValue] = useState('');
+  const [discussionList, updateDiscussionList] = useGlobal('discussionList');
 
   const handleInputChange = (e) => {
     updateSearchValue(e.target.value);
@@ -20,8 +22,8 @@ export default withRouter(props => {
     e.preventDefault();
     console.log('yo')
     //line is meant for use in axios res scope
+    props.history.push(`/searchResults/${searchValue}`)
     updateSearchValue('')
-    props.history.push("/searchResults")
 
 
 

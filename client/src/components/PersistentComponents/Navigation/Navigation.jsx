@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { styles } from './Navigation.style.js';
+import { styles, useStyles } from './Navigation.style.js';
 import SearchBar from '../SearchBar/SearchBar';
 import SignIOU from '../SignIOU/SignIOU';
 import {
@@ -16,6 +16,8 @@ import logo from '../../../Assets/images/logo.png';
 
 export default withStyles(styles)(props => {
   const { classes } = props;
+  const extraClasses = useStyles();
+
 
   const [drawerState, setDrawerState] = useState(false);
 
@@ -23,11 +25,15 @@ export default withStyles(styles)(props => {
     setDrawerState(open)
   }
 
+  const handleView = () => {
+    props.history.push(`/subForum/${1}`)
+  }
+
   return (
     // <div className={props.classes.navigationContainer}>
     <>
 
-      <AppBar className={classes.appBar} >
+      <AppBar className={`${classes.appBar} ${extraClasses.clip}`} >
         <Toolbar className={classes.navigationContainer}>
           <Grid container justify="space-between" alignItems="center" className={classes.navButtons}>
             <IconButton onClick={(e) => toggleDrawer(true, e)} >
@@ -52,11 +58,15 @@ export default withStyles(styles)(props => {
         </Toolbar>
       </AppBar>
 
-      <SwipeableDrawer open={drawerState} className={classes.drawer}>
+      <SwipeableDrawer 
+      open={drawerState}
+      onClose={(e)=> toggleDrawer(false, e)} 
+      onOpen={(e)=> toggleDrawer(true,e)}
+      className={classes.drawer}>
 
         <List onClick={(e)=> toggleDrawer(false,e)}>
           <ListItem>
-            <Button>
+            <Button onClick={handleView}>
               SubForums
             </Button>
           </ListItem>

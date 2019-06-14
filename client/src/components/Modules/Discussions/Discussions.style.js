@@ -70,8 +70,10 @@ export const styles = {
     // width: '100%',
     // justifyContent: 'space-between'
   },
-  failedLoading:{
-    margin: '0px auto'
+  loading:{
+    height: '300px',
+    alignSelf: 'center',
+    // border: '1px solid black'
   },
   netUpvote:{
     color: 'green'
@@ -91,5 +93,11 @@ export const styles = {
     height: '120px',
     width: '15%',
     margin: '0px'
+  },
+  upvoteBtn:{
+    color: 'green'
+  },
+  downvoteBtn:{
+    color: 'red'
   }
 };

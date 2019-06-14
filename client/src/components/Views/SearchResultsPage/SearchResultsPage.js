@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { withStyles, Typography } from '@material-ui/core';
-
+import { useGlobal } from 'reactn';
 import { styles } from './SearchResults.style';
 import Discussions from '../../Modules/Discussions/';
 
 export default withStyles(styles)(props => {
 
+  const [discussionList, updateDiscussionList] = useGlobal('discussionList');
   const [searchResultsList, updateSearchResultsList] = useState([]);
   const {classes} = props;
+
+  // const handleSearch = (discussionName) => {
+  //   return discussionName === searchInput;
+  // }
+
+  // useEffect(()=>{
+  //   const searchInput = props.match.params.id;
+
+  //   console.log(discussionList.find(handleSearch))
+  // },[])
 
 return(
   <div className={classes.searchResultsContainer}>

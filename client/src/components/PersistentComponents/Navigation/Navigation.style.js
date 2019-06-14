@@ -1,3 +1,7 @@
+import { makeStyles } from '@material-ui/core';
+
+export const useStyles = makeStyles(theme => ({
+}));
 
 export const styles = {
   appBar: {
@@ -30,5 +34,8 @@ export const styles = {
     // border: '1px solid black',
     width: '8%',
     marginLeft: '40px'
+  },
+  drawer: {
+    width: 240
   }
 };

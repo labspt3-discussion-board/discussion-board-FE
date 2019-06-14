@@ -1,5 +1,6 @@
 import React from 'react';
-import { withStyles, Typography, Grid, Button, ButtonGroup } from '@material-ui/core';
+import { withStyles, Typography, Grid, Button, ButtonGroup,
+Icon, IconButton } from '@material-ui/core';
 import { styles } from './SubForm.style';
 import Discussions from '../../Modules/Discussions';
 import SortBy from '../../PersistentComponents/SortBy/SortBy'
@@ -18,6 +19,9 @@ export default withStyles(styles)(props => {
       </ButtonGroup>
       <SortBy classes={classes}/>
       </Grid>
+      <IconButton>
+        <Icon></Icon>
+      </IconButton>
 
       <Discussions />
     </Grid>
