@@ -2,6 +2,9 @@ import React, { Component, } from 'react';
 import { styles } from './NewSubforumModal.style.js';
 import { withStyles, Typography, TextField, Card, Modal, IconButton, FormControlLabel, Checkbox, Avatar, List, Button, } from '@material-ui/core';
 import { Close, Person, Remove, Add, } from '@material-ui/icons';
+import Axios from 'axios';
+import { HOST, } from '../../constants.js';
+import Cookies from 'js-cookie';
 
 
 const MemberList = props => {
@@ -32,19 +35,22 @@ const MemberList = props => {
 
 
 	return (
-		<List className={ classes.listContainer }>
-			<ul>
+		<>
+			<Typography variant='subtitle1'>Members:</Typography>
+			<List className={ classes.listContainer }>
+				<ul>
 
-				{ renderMembers() }
-				<AddMember
-					{ ...props }
-					classes={ classes }
-					handleAddMemberSubmit={ props.handleAddMemberSubmit }
-					handleAddMemberClick={ props.handleAddMemberClick }
-					handleAddMemberBlur={ props.handleAddMemberBlur }
-				/>
-			</ul>
-		</List>
+					{ renderMembers() }
+					<AddMember
+						{ ...props }
+						classes={ classes }
+						handleAddMemberSubmit={ props.handleAddMemberSubmit }
+						handleAddMemberClick={ props.handleAddMemberClick }
+						handleAddMemberBlur={ props.handleAddMemberBlur }
+					/>
+				</ul>
+			</List>
+		</>
 	);
 }
 
@@ -92,6 +98,9 @@ class CreateSubforumForm extends Component {
 		super(props);
 
 		this.state = {
+			subforumNameInput: {
+				value: '',
+			},
 			members: ['testuser@mail.com'],
 			addMemberInput: {
 				show: false,
@@ -143,6 +152,35 @@ class CreateSubforumForm extends Component {
 		});
 	}
 
+	handleSubmit = e => {
+
+		console.log(Cookies.get('csrftoken'));
+
+		Axios({
+			method: 'post',
+			url: `${ HOST }api/subforums/`,
+			withCredentials: true,
+			headers: {
+				'X-CSRFToken': Cookies.get('csrftoken'),
+			},
+			data: {
+				name: this.state.subforumNameInput.value,
+			}
+		}).then(res => {
+			console.log(res.data);
+		}).catch(err => console.log(err));
+
+	}
+
+	handleChange = e => {
+
+		this.setState({
+			[e.target.name]: {
+				value: e.target.value,
+			}
+		});
+	}
+
 	componentDidUpdate() {
 		
 		if (this.state.addMemberInput.show) {
@@ -182,6 +220,9 @@ class CreateSubforumForm extends Component {
 								id='create-subforum-name-input'
 								variant='outlined'
 								label='Subforum Name'
+								name='subforumNameInput'
+								value={ this.state.subforumNameInput.value }
+								onChange={ this.handleChange }
 								className={ classes.subforumNameInput }
 								required
 							/>
@@ -196,7 +237,7 @@ class CreateSubforumForm extends Component {
 								label={ <Typography variant='subtitle1'>Private</Typography> }
 							/>
 
-							<Typography variant='subtitle1'>Members</Typography>
+							
 
 							<MemberList
 								{ ...this.state } 
@@ -220,14 +261,13 @@ class CreateSubforumForm extends Component {
 									variant='contained'
 									color='primary'
 									className={ classes.continueButton }
+									onClick={ e => {
+										this.handleSubmit(e);
+									}}
 								>
 									Continue
 								</Button>
 							</div>
-								
-
-
-
 						</form>
 					</Card>
 				</div>
