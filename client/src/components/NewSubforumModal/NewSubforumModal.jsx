@@ -157,17 +157,17 @@ class CreateSubforumForm extends Component {
 		console.log(Cookies.get('csrftoken'));
 
 		Axios({
-			method: 'post',
+			method: 'get',
 			url: `${ HOST }api/subforums/`,
 			withCredentials: true,
-			headers: {
-				'X-CSRFToken': Cookies.get('csrftoken'),
-			},
+			// headers: {
+			// 	'X-CSRFToken': Cookies.get('csrftoken'),
+			// },
 			data: {
 				name: this.state.subforumNameInput.value,
 			}
 		}).then(res => {
-			console.log(res.data);
+			console.log(res);
 		}).catch(err => console.log(err));
 
 	}
