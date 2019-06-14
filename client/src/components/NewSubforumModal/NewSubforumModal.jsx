@@ -160,9 +160,9 @@ class CreateSubforumForm extends Component {
 			method: 'post',
 			url: `${ HOST }api/subforums/`,
 			withCredentials: true,
-			headers: {
-				'X-CSRFToken': Cookies.get('csrftoken'),
-			},
+			// headers: {
+				// 'X-CSRFToken': Cookies.get('csrftoken'),
+			// },
 			data: {
 				name: this.state.subforumNameInput.value,
 			}
