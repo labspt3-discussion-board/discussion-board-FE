@@ -84,35 +84,38 @@ class App extends Component {
 		Axios({
 			url: `${ HOST }api/users/login/`,
 			method: 'post',
-			withCredentials: true,
 			data: {
-				email: formData.email.value,
+				username: formData.email.value,
 				password: formData.password.value,
 			}
 		}).then(res => {
 
-      console.log(res)
+      if (res.data.user) {
+        const user = {
+          id:        res.data.user.id,
+          firstName: res.data.user.first_name,
+          lastName:  res.data.user.last_name,
+          email:     res.data.user.email,
+          username:  res.data.user.username,
+          premium:   res.data.user.premium,
+          loggedIn:  true,
+        }
 
-			const user = {
-				id:        res.data[0].id,
-				firstName: res.data[0].first_name,
-				lastName:  res.data[0].last_name,
-				email:     res.data[0].email,
-				username:  res.data[0].username,
-				premium:   res.data[0].premium,
-				loggedIn:  res.data[1].loggedIn,
-			}
-      
-      setTimeout(() => {
-      this.setUserState(user);
-        this.setState({
-          loginModal: {
-            ...this.state.loginModal,
-            loading: false,
-          }
-        });
+        setTimeout(() => {
+          this.setState({
+            user,
+            loginModal: {
+              ...this.state.loginModal,
+              loading: false,
+            }
+          });
 
-      }, 400);
+        }, 400);
+      }
+
+      if (res.data.token) {
+        localStorage.setItem('LAMBDA_FORUM_AUTH_TOKEN', res.data.token);
+      }
 
 		}).catch(err => console.log(err));
 
@@ -120,29 +123,33 @@ class App extends Component {
   
   handleLogout = e => {
 
-    Axios({
-      url: `${ HOST }api/users/logout/`,
-      method: 'get',
-      withCredentials: true,
-      headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
-    }).then(res => {
+   Axios({
+     url: `${ HOST }api/users/logout/`,
+     method: 'get',
+     headers: {
+       'Authorization': 'Token ' + localStorage.getItem('LAMBDA_FORUM_AUTH_TOKEN'),
+     }
+   }).then(res => {
+    
+    console.log(res);
 
-      const user = {
-        id: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        username: '',
-        premium: false,
-        loggedIn: false,
-      }
+    const user = {
+      id:        '',
+      firstName: '',
+      lastName:  '',
+      email:     '',
+      username:  '',
+      premium:   '',
+      loggedIn:  false,
+    }
 
-      this.setUserState(user);
+    this.setState({
+      user,
+    });
 
-      Cookies.remove('csrftoken');
-      Cookies.remove('sessionid');
+    localStorage.removeItem('LAMBDA_FORUM_AUTH_TOKEN');
 
-    }).catch(err => console.log(err));
+   }).catch(err => console.log(err));
   }
 
   handleRegister = (e, formData) => {
@@ -199,27 +206,40 @@ class App extends Component {
       url: `${ HOST }api/users/login/check/`,
       method: 'get',
       withCredentials: true,
+      headers: {
+        'Authorization': 'Token ' + localStorage.getItem('LAMBDA_FORUM_AUTH_TOKEN'),
+      }
     }).then(res => {
-      if (res.data[1].loggedIn === true) {
-        this.setUserState({
-          id:        res.data[0].id,
-          firstName: res.data[0].first_name,
-          lastName:  res.data[0].last_name,
-          email:     res.data[0].email,
-          username:  res.data[0].username,
-          premium:   res.data[0].premium,
-          loggedIn:  res.data[1].loggedIn,
+     
+      if (res.data.user) {
+        const user = {
+          id:        res.data.user.id,
+          firstName: res.data.user.first_name,
+          lastName:  res.data.user.last_name,
+          email:     res.data.user.email,
+          username:  res.data.user.username,
+          premium:   res.data.user.premium,
+          loggedIn:  true,
+        }
+
+        this.setState({
+          user,
         });
+
       } else {
         this.setUserState({
-          ...this.state.user,
+          user: {
+            id:        '',
+            firstName: '',
+            lastName:  '',
+            email:     '',
+            username:  '',
+            premium:   '',
+          },
           loggedIn: false,
         });
       }
-      
-
     }).catch(err => console.log(err));
-
   }
 
   handleModalOpen = (e, name) => {
@@ -238,6 +258,7 @@ class App extends Component {
         <Navigation
           { ...this.state }
           handleLoginModal={ this.handleLoginModal }
+          handleLogout={ this.handleLogout }
           setUserState={ this.setUserState }
           handleModalOpen={ this.handleModalOpen }
         />

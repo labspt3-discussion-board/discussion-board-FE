@@ -100,33 +100,6 @@ class Navigation extends Component {
     });
   }
 
-  handleLogout = e => {
-
-    Axios({
-      url: `${ HOST }api/users/logout/`,
-      method: 'get',
-      withCredentials: true,
-      headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
-    }).then(res => {
-
-      const user = {
-        id: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        username: '',
-        premium: false,
-        loggedIn: false,
-      }
-
-      this.props.setUserState(user);
-
-      Cookies.remove('csrftoken');
-      Cookies.remove('sessionid');
-
-    }).catch(err => console.log(err));
-  }
-
   render() {
 
     const { classes } = this.props;
@@ -178,7 +151,7 @@ class Navigation extends Component {
           <SearchBar classes={classes}/>
           <AccountMenu
             { ...this.state }
-            handleLogout={ this.handleLogout }
+            handleLogout={ this.props.handleLogout }
             handleAccountMenuOpen={ this.handleAccountMenuOpen }
             handleAccountMenuClose={ this.handleAccountMenuClose }
           />
