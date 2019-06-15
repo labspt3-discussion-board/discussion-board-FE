@@ -218,7 +218,7 @@ class App extends Component {
     Axios({
       url: `${ HOST }api/users/login/check/`,
       method: 'get',
-      withCredentials: true,
+      // withCredentials: true,
       headers: {
         'Authorization': 'Token ' + localStorage.getItem('LAMBDA_FORUM_AUTH_TOKEN'),
       }
