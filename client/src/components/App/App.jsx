@@ -131,8 +131,6 @@ class App extends Component {
      }
    }).then(res => {
     
-    console.log(res);
-
     const user = {
       id:        '',
       firstName: '',
@@ -156,7 +154,7 @@ class App extends Component {
 		e.preventDefault();
 
 		Axios({
-			url: HOST + 'api/users/',
+			url: HOST + 'api/users/register/',
 			method: 'post',
 			withCredentials: true,
 			data: {
@@ -168,17 +166,32 @@ class App extends Component {
 			}
 		}).then(res => {
 
-			const user = {
-				id:        res.data[0].id,
-				firstName: res.data[0].first_name,
-				lastName:  res.data[0].last_name,
-				email:     res.data[0].email,
-				username:  res.data[0].username,
-				premium:   res.data[0].premium,
-				loggedIn:  res.data[1].loggedIn,
-			}
-			
-			this.setUserState(user);
+			if (res.data.user) {
+        const user = {
+          id:        res.data.user.id,
+          firstName: res.data.user.first_name,
+          lastName:  res.data.user.last_name,
+          email:     res.data.user.email,
+          username:  res.data.user.username,
+          premium:   res.data.user.premium,
+          loggedIn:  true,
+        }
+
+        setTimeout(() => {
+          this.setState({
+            user,
+            loginModal: {
+              ...this.state.loginModal,
+              loading: false,
+            }
+          });
+
+        }, 400);
+      }
+
+      if (res.data.token) {
+        localStorage.setItem('LAMBDA_FORUM_AUTH_TOKEN', res.data.token);
+      }
 
 		}).catch(err => console.log(err));
 
