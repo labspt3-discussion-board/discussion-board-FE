@@ -1,7 +1,7 @@
 import React, { Component, } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Button, } from '@material-ui/core';
+import { Button, Avatar, } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { styles } from './Navigation.style.js';
 import SearchBar from '../SearchBar/SearchBar';
@@ -104,6 +104,10 @@ class Navigation extends Component {
 
     const { classes } = this.props;
 
+    const getInitials = (first, last) => {
+      return (first.substr(0, 1) + last.substr(0, 1)).toUpperCase();
+    }
+
     const renderNavOptions = () => {
       return !this.props.user.loggedIn ? (
         <div className={ classes.containerRightOne }>
@@ -124,19 +128,34 @@ class Navigation extends Component {
               <NoteAdd />
             </IconButton>
           </Tooltip>
-
-          <Tooltip title='Account Menu'>
-            <IconButton
-              id='navigation-account-menu-button'
-              edge="end"
-              aria-owns={this.state.accountMenu.anchorEl ? 'account-menu' : undefined}
-              aria-haspopup="true"
-              color="inherit"
-              onClick={ this.handleAccountMenuOpen }
-            >
-              <AccountCircle />
-            </IconButton>
-          </Tooltip>
+          {
+            this.props.user.avatarImg === '' ? (
+              <Avatar
+                id='navigation-account-menu-button'
+                edge="end"
+                aria-owns={this.state.accountMenu.anchorEl ? 'account-menu' : undefined}
+                aria-haspopup="true"
+                color="inherit"
+                onClick={ this.handleAccountMenuOpen }
+                className={ classes.avatar }
+              >
+                { getInitials(this.props.user.firstName, this.props.user.lastName) }
+              </Avatar>
+            ) : 
+            (
+              <Avatar 
+                id='navigation-account-menu-button'
+                edge="end"
+                aria-owns={this.state.accountMenu.anchorEl ? 'account-menu' : undefined}
+                aria-haspopup="true"
+                color="inherit"
+                src={ this.props.user.avatarImg }
+                className={ classes.avatar }
+                onClick={ this.handleAccountMenuOpen }
+              />
+            )
+          }
+          
         </div>
       )
     }

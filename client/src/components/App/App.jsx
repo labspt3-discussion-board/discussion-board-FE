@@ -10,7 +10,7 @@ import { fab, }                                        from '@fortawesome/free-b
 import { BrowserRouter as Router, Route, Link }        from "react-router-dom";
 import Cookies                                         from 'js-cookie';
 import Axios                                           from 'axios';
-import { HOST, }                                       from '../../constants.js';
+import { HOST, CLIENT, }                                       from '../../constants.js';
 
 library.add(faSignInAlt, faUserAlt, fab);
 
@@ -26,6 +26,7 @@ class App extends Component {
         email: '',
         username: '',
         premium: false,
+        avatarImg: '',
         loggedIn: false,
       },
       loginModal: {
@@ -98,6 +99,7 @@ class App extends Component {
           email:     res.data.user.email,
           username:  res.data.user.username,
           premium:   res.data.user.premium,
+          avatarImg: res.data.user.avatar_img,
           loggedIn:  true,
         }
 
@@ -203,16 +205,46 @@ class App extends Component {
 
   componentDidMount() {
 
+    // Open login message modal.
     if (this.getSearchParams().hasOwnProperty('loggedIn')) {
       const loggedIn = this.getSearchParams()['loggedIn'];
 
       if (loggedIn) {
-        this.setState({
-          loginMessageModal: {
-            open: true,
-          }
-        });
+
+        window.location = `${ CLIENT }`
+
+        // this.setState({
+        //   loginMessageModal: {
+        //     open: true,
+        //   }
+        // });
       }
+    }
+
+    // Store token from search params.
+    if (this.getSearchParams().hasOwnProperty('token')) {
+      const token = this.getSearchParams().token;
+
+      localStorage.setItem('LAMBDA_FORUM_AUTH_TOKEN', token);
+    }
+
+    // Store avatar image from search params.
+    if (this.getSearchParams().hasOwnProperty('avatarImg')) {
+      const avatarImg = this.getSearchParams().avatarImg;
+      localStorage.setItem('avatarImg', avatarImg);
+    }
+
+    // Set avatar image to user state.
+    if (localStorage.getItem('avatarImg')) {
+      const avatarImg = localStorage.getItem('avatarImg');
+      // localStorage.removeItem('avatarImg');
+
+      this.setState({
+        user: {
+          ...this.state.user,
+          avatarImg,
+        }
+      });
     }
 
     Axios({
@@ -226,6 +258,7 @@ class App extends Component {
      
       if (res.data.user) {
         const user = {
+          ...this.state.user,
           id:        res.data.user.id,
           firstName: res.data.user.first_name,
           lastName:  res.data.user.last_name,

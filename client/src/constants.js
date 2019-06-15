@@ -7,3 +7,6 @@ export const FACEBOOK_OAUTH_ID = '2805826072793210';
 export const GOOGLE_OAUTH_REDIRECT_URI = 'https://discussion-board-api-test.herokuapp.com/api/users/oauth/google/';
 // export const GOOGLE_OAUTH_REDIRECT_URI = 'https://discussion-board-api.herokuapp.com/api/users/oauth/google/';
 export const FACEBOOK_OAUTH_REDIRECT_URI = 'https://discussion-board-api-test.herokuapp.com/api/users/oauth/facebook/';
+// export const CLIENT = 'http://localhost:3000/'
+export const CLIENT = 'https://lambda-discussion-board-test.herokuapp.com/'
+// export const CLIENT = 'https://lambda-discussion-board.herokuapp.com/'
