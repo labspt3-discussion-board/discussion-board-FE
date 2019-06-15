@@ -26,7 +26,7 @@ export default withStyles(styles)(props => {
   }
 
   const handleView = () => {
-    props.history.push(`/subForum/${1}`)
+    props.history.push(`/subForum/:id/discussions`)
   }
 
   return (
@@ -43,13 +43,7 @@ export default withStyles(styles)(props => {
             <Link className={classes.navigationHome} to="/">
               <div className="Logo">
                 <Avatar alt="Lambda Logo" src={logo} />
-                {/* <img src="https://pbs.twimg.com/profile_images/1119017796954808322/F1pUmZtW.png" alt="Lambda" /> */}
               </div>
-              {/* <Icon>home</Icon> */}
-              {/* <Typography variant="h5" component="h1" color="inherit">
-              Lambda Forum */}
-              {/* <img src="../../../../public/images/LambdaLogo.png"/> */}
-              {/* </Typography> */}
             </Link>
           </Grid>
           {/* </Grid> */}

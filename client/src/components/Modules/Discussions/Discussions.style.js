@@ -47,8 +47,8 @@ export const styles = {
   subForum: {
     color: 'black'
   },
-  comments: {
-
+  comment: {
+    textAlign: 'center'
   },
   commentsNumber: {
     margin: '10px auto',
@@ -56,10 +56,9 @@ export const styles = {
     fontSize: '20px'
   },
   topDiscussionContainer: {
-    width: '75%',
+    // width: '75%',
     // border: '1px solid blue',
     margin: '0px',
-    display: 'flex',
     flexDirection: 'column',
     lineHeight: '30px'
   },
@@ -83,7 +82,7 @@ export const styles = {
   },
   rightContainer:{
     // border: '1px solid red',
-    width: '10%'
+    width: '20%'
   },
   postLoading:{
     backgroundColor: 'red'
@@ -99,5 +98,15 @@ export const styles = {
   },
   downvoteBtn:{
     color: 'red'
+  },
+  createDiscussion:{
+    // border: '1px solid black',
+  },
+  clickableCard:{
+    textDecoration: 'none',
+    // border: '1px solid black',
+    width: '80%',
+    display: 'flex',
+    color: 'black'
   }
 };
