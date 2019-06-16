@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import logo from '../../../Assets/images/logo.png';
 import { styles } from './Discussions.style';
 import Votes from '../../Modules/Votes'
+import DiscussionModal from '../DiscussionModal';
 
 import HOST from '../../../Host';
 
@@ -29,6 +30,7 @@ const Loading = () => {
 
 export default withStyles(styles)(props => {
   const [discussionList, updateDiscussionList] = useGlobal('discussionList');
+  const [openModal, updateOpenModal] = useGlobal('openModal');
 
   const { classes } = props;
   //Axios call for discussion data from database
@@ -121,16 +123,22 @@ export default withStyles(styles)(props => {
     //to initiate correct axios call. ex. top discussions vs subForum discussions
   }
 
+  const handleOpenModal = () => {
+    updateOpenModal(true);
+  };
+
   return (
     <>
       {props.view === 'subForum' ?
-
-        <Grid container className={classes.createDiscussion}>
-          <IconButton>
-            <Icon >add_circle</Icon>
-            <Typography>Create a new discussion</Typography>
-          </IconButton>
-        </Grid>
+        <>
+          <Grid container className={classes.createDiscussion}>
+            <IconButton onClick={handleOpenModal}>
+              <Icon >add_circle</Icon>
+              <Typography>Create a new discussion</Typography>
+            </IconButton>
+          </Grid>
+          <DiscussionModal />
+        </>
         : null
       }
       {discussionList.length !== 0 ? discussionList.map((discussion, index) => {

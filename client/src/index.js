@@ -99,8 +99,10 @@ const dummyData = [{
 }];
 
 setGlobal({
-  discussionList: dummyData
+  discussionList: dummyData,
+  openModal: false
 });
+
 
 ReactDOM.render(
   <Router>
