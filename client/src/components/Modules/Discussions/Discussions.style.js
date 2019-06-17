@@ -90,8 +90,8 @@ export const styles = {
   discussionImg:{
     borderRadius: '4px',
     height: '120px',
-    width: '15%',
-    margin: '0px'
+    width: '40%',
+    margin: '0px',
   },
   upvoteBtn:{
     color: 'green'
