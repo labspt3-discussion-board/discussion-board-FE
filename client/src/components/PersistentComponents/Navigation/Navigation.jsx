@@ -1,7 +1,7 @@
 import React, { Component, } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Button, } from '@material-ui/core';
+import { Button, Avatar, } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { styles } from './Navigation.style.js';
 import SearchBar from '../SearchBar/SearchBar';
@@ -98,38 +98,15 @@ class Navigation extends Component {
         isOpen: false,
       }
     });
-  }
-
-  handleLogout = e => {
-
-    Axios({
-      url: `${ HOST }api/users/logout/`,
-      method: 'get',
-      withCredentials: true,
-      headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
-    }).then(res => {
-
-      const user = {
-        id: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        username: '',
-        premium: false,
-        loggedIn: false,
-      }
-
-      this.props.setUserState(user);
-
-      Cookies.remove('csrftoken');
-      Cookies.remove('sessionid');
-
-    }).catch(err => console.log(err));
-  }
+  } 
 
   render() {
 
     const { classes } = this.props;
+
+    const getInitials = (first, last) => {
+      return (first.substr(0, 1) + last.substr(0, 1)).toUpperCase();
+    }
 
     const renderNavOptions = () => {
       return !this.props.user.loggedIn ? (
@@ -151,19 +128,34 @@ class Navigation extends Component {
               <NoteAdd />
             </IconButton>
           </Tooltip>
-
-          <Tooltip title='Account Menu'>
-            <IconButton
-              id='navigation-account-menu-button'
-              edge="end"
-              aria-owns={this.state.accountMenu.anchorEl ? 'account-menu' : undefined}
-              aria-haspopup="true"
-              color="inherit"
-              onClick={ this.handleAccountMenuOpen }
-            >
-              <AccountCircle />
-            </IconButton>
-          </Tooltip>
+          {
+            this.props.user.avatarImg === '' ? (
+              <Avatar
+                id='navigation-account-menu-button'
+                edge="end"
+                aria-owns={this.state.accountMenu.anchorEl ? 'account-menu' : undefined}
+                aria-haspopup="true"
+                color="inherit"
+                onClick={ this.handleAccountMenuOpen }
+                className={ classes.avatar }
+              >
+                { getInitials(this.props.user.firstName, this.props.user.lastName) }
+              </Avatar>
+            ) : 
+            (
+              <Avatar 
+                id='navigation-account-menu-button'
+                edge="end"
+                aria-owns={this.state.accountMenu.anchorEl ? 'account-menu' : undefined}
+                aria-haspopup="true"
+                color="inherit"
+                src={ this.props.user.avatarImg }
+                className={ classes.avatar }
+                onClick={ this.handleAccountMenuOpen }
+              />
+            )
+          }
+          
         </div>
       )
     }
@@ -178,7 +170,7 @@ class Navigation extends Component {
           <SearchBar classes={classes}/>
           <AccountMenu
             { ...this.state }
-            handleLogout={ this.handleLogout }
+            handleLogout={ this.props.handleLogout }
             handleAccountMenuOpen={ this.handleAccountMenuOpen }
             handleAccountMenuClose={ this.handleAccountMenuClose }
           />

@@ -1,4 +1,7 @@
 
+
+const avatarColors = ['#9c27b0', '#2196f3', '#4caf50', '#ffeb3b', '#ff9800', '#795548', '#ff5722', '#00bcd4']
+
 export const styles = {
   appBar: {
     background: '#a0001e',
@@ -50,8 +53,13 @@ export const styles = {
     textTransform: 'capitalize',
     // border: '1px solid black',
     width: '90px',
-  }, signUpButtonLink: {
+  },
+  signUpButtonLink: {
     textDecoration: 'none',
+  },
+  avatar: {
+    cursor: 'pointer',
+    backgroundColor: avatarColors[Math.floor(Math.random() * avatarColors.length)],
   },
   
 };

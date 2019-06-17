@@ -10,7 +10,7 @@ import { fab, }                                        from '@fortawesome/free-b
 import { BrowserRouter as Router, Route, Link }        from "react-router-dom";
 import Cookies                                         from 'js-cookie';
 import Axios                                           from 'axios';
-import { HOST, }                                       from '../../constants.js';
+import { HOST, CLIENT, }                                       from '../../constants.js';
 
 library.add(faSignInAlt, faUserAlt, fab);
 
@@ -26,6 +26,7 @@ class App extends Component {
         email: '',
         username: '',
         premium: false,
+        avatarImg: '',
         loggedIn: false,
       },
       loginModal: {
@@ -84,35 +85,39 @@ class App extends Component {
 		Axios({
 			url: `${ HOST }api/users/login/`,
 			method: 'post',
-			withCredentials: true,
 			data: {
-				email: formData.email.value,
+				username: formData.email.value,
 				password: formData.password.value,
 			}
 		}).then(res => {
 
-      console.log(res)
+      if (res.data.user) {
+        const user = {
+          id:        res.data.user.id,
+          firstName: res.data.user.first_name,
+          lastName:  res.data.user.last_name,
+          email:     res.data.user.email,
+          username:  res.data.user.username,
+          premium:   res.data.user.premium,
+          avatarImg: res.data.user.avatar_img,
+          loggedIn:  true,
+        }
 
-			const user = {
-				id:        res.data[0].id,
-				firstName: res.data[0].first_name,
-				lastName:  res.data[0].last_name,
-				email:     res.data[0].email,
-				username:  res.data[0].username,
-				premium:   res.data[0].premium,
-				loggedIn:  res.data[1].loggedIn,
-			}
-      
-      setTimeout(() => {
-      this.setUserState(user);
-        this.setState({
-          loginModal: {
-            ...this.state.loginModal,
-            loading: false,
-          }
-        });
+        setTimeout(() => {
+          this.setState({
+            user,
+            loginModal: {
+              ...this.state.loginModal,
+              loading: false,
+            }
+          });
 
-      }, 400);
+        }, 400);
+      }
+
+      if (res.data.token) {
+        localStorage.setItem('LAMBDA_FORUM_AUTH_TOKEN', res.data.token);
+      }
 
 		}).catch(err => console.log(err));
 
@@ -120,36 +125,39 @@ class App extends Component {
   
   handleLogout = e => {
 
-    Axios({
-      url: `${ HOST }api/users/logout/`,
-      method: 'get',
-      withCredentials: true,
-      headers: { 'X-CSRFToken': Cookies.get('csrftoken') },
-    }).then(res => {
+   Axios({
+     url: `${ HOST }api/users/logout/`,
+     method: 'get',
+     headers: {
+       'Authorization': 'Token ' + localStorage.getItem('LAMBDA_FORUM_AUTH_TOKEN'),
+     }
+   }).then(res => {
+    
+    const user = {
+      id:        '',
+      firstName: '',
+      lastName:  '',
+      email:     '',
+      username:  '',
+      premium:   '',
+      loggedIn:  false,
+    }
 
-      const user = {
-        id: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        username: '',
-        premium: false,
-        loggedIn: false,
-      }
+    this.setState({
+      user,
+    });
 
-      this.setUserState(user);
+    localStorage.removeItem('LAMBDA_FORUM_AUTH_TOKEN');
+    localStorage.removeItem('avatarImg');
 
-      Cookies.remove('csrftoken');
-      Cookies.remove('sessionid');
-
-    }).catch(err => console.log(err));
+   }).catch(err => console.log(err));
   }
 
   handleRegister = (e, formData) => {
 		e.preventDefault();
 
 		Axios({
-			url: HOST + 'api/users/',
+			url: HOST + 'api/users/register/',
 			method: 'post',
 			withCredentials: true,
 			data: {
@@ -161,17 +169,32 @@ class App extends Component {
 			}
 		}).then(res => {
 
-			const user = {
-				id:        res.data[0].id,
-				firstName: res.data[0].first_name,
-				lastName:  res.data[0].last_name,
-				email:     res.data[0].email,
-				username:  res.data[0].username,
-				premium:   res.data[0].premium,
-				loggedIn:  res.data[1].loggedIn,
-			}
-			
-			this.setUserState(user);
+			if (res.data.user) {
+        const user = {
+          id:        res.data.user.id,
+          firstName: res.data.user.first_name,
+          lastName:  res.data.user.last_name,
+          email:     res.data.user.email,
+          username:  res.data.user.username,
+          premium:   res.data.user.premium,
+          loggedIn:  true,
+        }
+
+        setTimeout(() => {
+          this.setState({
+            user,
+            loginModal: {
+              ...this.state.loginModal,
+              loading: false,
+            }
+          });
+
+        }, 400);
+      }
+
+      if (res.data.token) {
+        localStorage.setItem('LAMBDA_FORUM_AUTH_TOKEN', res.data.token);
+      }
 
 		}).catch(err => console.log(err));
 
@@ -183,43 +206,87 @@ class App extends Component {
 
   componentDidMount() {
 
+    // Open login message modal.
     if (this.getSearchParams().hasOwnProperty('loggedIn')) {
       const loggedIn = this.getSearchParams()['loggedIn'];
 
       if (loggedIn) {
-        this.setState({
-          loginMessageModal: {
-            open: true,
-          }
-        });
+
+        window.location = `${ CLIENT }`
+
+        // this.setState({
+        //   loginMessageModal: {
+        //     open: true,
+        //   }
+        // });
       }
+    }
+
+    // Store token from search params.
+    if (this.getSearchParams().hasOwnProperty('token')) {
+      const token = this.getSearchParams().token;
+
+      localStorage.setItem('LAMBDA_FORUM_AUTH_TOKEN', token);
+    }
+
+    // Store avatar image from search params.
+    if (this.getSearchParams().hasOwnProperty('avatarImg')) {
+      const avatarImg = this.getSearchParams().avatarImg;
+      localStorage.setItem('avatarImg', avatarImg);
+    }
+
+    // Set avatar image to user state.
+    if (localStorage.getItem('avatarImg')) {
+      const avatarImg = localStorage.getItem('avatarImg');
+      // localStorage.removeItem('avatarImg');
+
+      this.setState({
+        user: {
+          ...this.state.user,
+          avatarImg,
+        }
+      });
     }
 
     Axios({
       url: `${ HOST }api/users/login/check/`,
       method: 'get',
-      withCredentials: true,
+      // withCredentials: true,
+      headers: {
+        'Authorization': 'Token ' + localStorage.getItem('LAMBDA_FORUM_AUTH_TOKEN'),
+      }
     }).then(res => {
-      if (res.data[1].loggedIn === true) {
-        this.setUserState({
-          id:        res.data[0].id,
-          firstName: res.data[0].first_name,
-          lastName:  res.data[0].last_name,
-          email:     res.data[0].email,
-          username:  res.data[0].username,
-          premium:   res.data[0].premium,
-          loggedIn:  res.data[1].loggedIn,
+     
+      if (res.data.user) {
+        const user = {
+          ...this.state.user,
+          id:        res.data.user.id,
+          firstName: res.data.user.first_name,
+          lastName:  res.data.user.last_name,
+          email:     res.data.user.email,
+          username:  res.data.user.username,
+          premium:   res.data.user.premium,
+          loggedIn:  true,
+        }
+
+        this.setState({
+          user,
         });
+
       } else {
         this.setUserState({
-          ...this.state.user,
+          user: {
+            id:        '',
+            firstName: '',
+            lastName:  '',
+            email:     '',
+            username:  '',
+            premium:   '',
+          },
           loggedIn: false,
         });
       }
-      
-
     }).catch(err => console.log(err));
-
   }
 
   handleModalOpen = (e, name) => {
@@ -238,6 +305,7 @@ class App extends Component {
         <Navigation
           { ...this.state }
           handleLoginModal={ this.handleLoginModal }
+          handleLogout={ this.handleLogout }
           setUserState={ this.setUserState }
           handleModalOpen={ this.handleModalOpen }
         />
