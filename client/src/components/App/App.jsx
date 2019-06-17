@@ -148,6 +148,7 @@ class App extends Component {
     });
 
     localStorage.removeItem('LAMBDA_FORUM_AUTH_TOKEN');
+    localStorage.removeItem('avatarImg');
 
    }).catch(err => console.log(err));
   }

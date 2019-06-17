@@ -98,7 +98,7 @@ class Navigation extends Component {
         isOpen: false,
       }
     });
-  }
+  } 
 
   render() {
 

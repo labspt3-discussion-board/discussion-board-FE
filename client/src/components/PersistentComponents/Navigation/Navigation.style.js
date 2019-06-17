@@ -60,6 +60,6 @@ export const styles = {
   avatar: {
     cursor: 'pointer',
     backgroundColor: avatarColors[Math.floor(Math.random() * avatarColors.length)],
-  }
+  },
   
 };
