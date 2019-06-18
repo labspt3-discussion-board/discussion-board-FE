@@ -4,3 +4,4 @@ export { default as LandingPage        } from './Views/LandingPage/LandingPage.j
 export { default as Navigation         } from './PersistentComponents/Navigation/Navigation.jsx';
 export { default as LoginMessageModal  } from './LoginMessageModal/LoginMessageModal.jsx';
 export { default as NewSubforumModal   } from './NewSubforumModal/NewSubforumModal.jsx';
+export { default as Subforum           } from './Subforum/Subforum.jsx';

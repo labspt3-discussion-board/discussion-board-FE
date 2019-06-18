@@ -38,7 +38,7 @@ const MemberList = props => {
 		<>
 			<Typography variant='subtitle1'>Members:</Typography>
 			<List className={ classes.listContainer }>
-				<ul>
+				<ul className={ classes.listContainerInner }>
 
 					{ renderMembers() }
 					<AddMember
@@ -160,13 +160,6 @@ class CreateSubforumForm extends Component {
 			method: 'get',
 			url: `${ HOST }api/subforums/`,
 			withCredentials: true,
-			// headers: {
-<<<<<<< HEAD
-				// 'X-CSRFToken': Cookies.get('csrftoken'),
-=======
-			// 	'X-CSRFToken': Cookies.get('csrftoken'),
->>>>>>> 7da743a4705eb3536eba04c9dbd98faff14617c0
-			// },
 			data: {
 				name: this.state.subforumNameInput.value,
 			}

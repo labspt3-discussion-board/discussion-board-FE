@@ -49,10 +49,12 @@ export const styles = {
 		marginBottom: '15px',
 	},
 	listContainer: {
-		// padding: '5px',
 		// border: '1px solid black',
 		overflow: 'auto',
 		height: '100%',
+	},
+	listContainerInner: {
+		padding: '0px',
 	},
 	avatarContainer: {
 		display: 'flex',

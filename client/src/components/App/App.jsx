@@ -2,7 +2,7 @@ import React, { Component, }                           from 'react';
 import CssBaseline                                     from '@material-ui/core/CssBaseline';
 import { Login, Register, LandingPage,
          Navigation, LoginMessageModal, 
-         NewSubforumModal,
+         NewSubforumModal, Subforum,
          }              from '../components.js';
 import { library }                                     from '@fortawesome/fontawesome-svg-core';
 import { faSignInAlt, faUserAlt, }                     from '@fortawesome/free-solid-svg-icons';
@@ -343,6 +343,16 @@ class App extends Component {
             />)
           }} 
         />
+
+        <Route path="/d/:subforum/" render={({ match }) => {
+          return (
+            <Subforum
+              subforum={ match.params.subforum }
+            />
+          )
+        }}
+        />
+
       </Router>
     );
   }
