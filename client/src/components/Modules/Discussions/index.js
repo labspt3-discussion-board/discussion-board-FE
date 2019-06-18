@@ -16,7 +16,6 @@ import { Link } from 'react-router-dom';
 import logo from '../../../Assets/images/logo.png';
 import { styles } from './Discussions.style';
 import Votes from '../../Modules/Votes'
-import DiscussionModal from '../DiscussionModal/CreateDiscussion';
 
 import HOST from '../../../Host';
 
@@ -144,7 +143,7 @@ export default withStyles(styles)(props => {
         return (
           <LazyLoad key={index} placeholder={<Loading />}>
             <Card raised="true" key={index} className={props.classes.discussion}>
-              <Link className={props.classes.clickableCard} to={`/f/${1}`}>
+              <Link className={props.classes.clickableCard} to={`/f/${1}/discussion/${1}`}>
                 <CardMedia
                   className={props.classes.discussionImg}
                   image={logo}
