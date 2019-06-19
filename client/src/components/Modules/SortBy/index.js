@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { NativeSelect } from '@material-ui/core/';
 import { useGlobal } from 'reactn';
-import { getThemeProps } from '@material-ui/styles';
 
 
 
-const SortBy = props => {
+export default props => {
   const [filter, updateFilter] = useState('recent');
 
   const [discussionList, updateDiscussionList] = useGlobal('discussionList');
@@ -114,5 +113,3 @@ const SortBy = props => {
     </div>
   )
 }
-
-export default SortBy;

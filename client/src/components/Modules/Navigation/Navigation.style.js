@@ -12,7 +12,7 @@ export const styles = {
     background: '#a0001e',
     display: 'flex',
     justifyContent: 'space-between',
-    border: '1px solid blue'
+    // border: '1px solid blue'
   },
   signContainer: {
     display: 'flex',
@@ -32,7 +32,7 @@ export const styles = {
   Logo: {
   },
   navButtons:{
-    border: '1px solid black',
+    // border: '1px solid black',
     width: '25%',
     // marginLeft: '40px'
   },
@@ -41,16 +41,16 @@ export const styles = {
   },
   userActions:{
     justifyContent: 'space-between',
-    border: '1px solid white',
+    // border: '1px solid white',
     width: '25%',
   },
   searchBarContainer: {
     width: '60%',
     justifyContent: 'center',
-    border: '1px solid green'
+    // border: '1px solid green'
   },
   createDiscussion: {
-    border: '1px solid blue',
+    // border: '1px solid blue',
     width: '50%'
   }
 };

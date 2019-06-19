@@ -6,7 +6,7 @@ import {
 import { styles } from './CreateDiscussion.style';
 import { useGlobal } from 'reactn';
 
-import logo from '../../../../Assets/images/logo.png';
+import logo from '../../../Assets/images/logo.png';
 
 export default withStyles(styles)(props => {
 
@@ -24,11 +24,11 @@ export default withStyles(styles)(props => {
     <Modal open={openModal} onClose={handleCloseModal}>
       <Grid container className={classes.modalContainer}>
         <Avatar alt="user avatar" src={logo} />
-        <TextField className={classes.inputField} 
+        <TextField className={classes.inputField}
           multiline variant="outlined" margin="normal"
           placeholder="Title" />
-        <TextField className={classes.inputField} 
-          autoComplete multiline variant="outlined" 
+        <TextField className={classes.inputField}
+          autoComplete multiline variant="outlined"
           margin="normal" placeholder="Description" rows='5' />
         <TextField multiline variant="outlined" margin="normal"
           placeholder="SubForum" />

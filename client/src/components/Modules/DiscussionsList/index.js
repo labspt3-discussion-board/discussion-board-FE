@@ -14,10 +14,11 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 import logo from '../../../Assets/images/logo.png';
-import { styles } from './Discussions.style';
-import Votes from '../../Modules/Votes'
+import { styles } from './DiscussionsList.style';
+import Votes from '../Votes'
+import { dummyData } from '../../../DummyData';
 
-import HOST from '../../../Host';
+import HOST from '../../../Host/Host';
 
 const Loading = () => {
   return (
@@ -29,60 +30,62 @@ const Loading = () => {
 
 export default withStyles(styles)(props => {
   const [discussionList, updateDiscussionList] = useGlobal('discussionList');
-  // const [openModal, updateOpenModal] = useGlobal('openModal');
 
+  console.log(discussionList)
   const { classes } = props;
   //Axios call for discussion data from database
+  useEffect(() => {
+    axios.get(`${HOST}api/${props.discListType}/`)
+      .then(res => {
+        console.log(res.data)
+        updateDiscussionList(res.data.results)
+      }).catch(err => {
+        console.log(err);
+      });
+  }, [])
+
+  //Axios call for users and subforums related to each discussion,
+  //call must be made after getting initial discussion list
   // useEffect(() => {
-  //   axios.get(`${HOST}api/${props.discListType}/`)
-  //     .then(res => {
-  //       console.log(res.data.slice(0, 10))
-  //       updateDiscussionList(res.data.slice(0, 20))
-  //     }).catch(err => {
-  //       console.log(err);
-  //     });
-  // }, [])
+  //   if (discussionList !== dummyData) {
+  //     axios.get(`${HOST}api/users/`)
+  //       .then(res => {
+  //         console.log(res.data)
+  //         let userList = res.data;
+  //         let discussionOwner = discussionList;
 
-  // //Axios call for users and subforums related to each discussion,
-  // //call must be made after getting initial discussion list
-  // useEffect(() => {
-  //   axios.get(`${HOST}api/users/`)
-  //     .then(res => {
-  //       console.log(res.data)
-  //       let userList = res.data;
-  //       let discussionOwner = discussionList;
+  //         for (let n = 0; n < userList.length; n++) {
 
-  //       for (let n = 0; n < userList.length; n++) {
-
-  //         for (let i = 0; i < discussionOwner.length; i++) {
-  //           if (discussionOwner[i]['owner'] === userList[n]['id']) {
-  //             discussionOwner[i].ownerName = userList[n]['username'];
+  //           for (let i = 0; i < discussionOwner.length; i++) {
+  //             if (discussionOwner[i]['owner'] === userList[n]['id']) {
+  //               discussionOwner[i].ownerName = userList[n]['username'];
+  //             }
   //           }
   //         }
-  //       }
-  //       updateDiscussionList(discussionOwner)
-  //     }).catch(err => {
-  //       console.log(err)
-  //     });
+  //         updateDiscussionList(discussionOwner)
+  //       }).catch(err => {
+  //         console.log(err)
+  //       });
 
-  //   axios.get(`${HOST}api/subforums/`)
-  //     .then(res => {
-  //       console.log(res.data)
-  //       let subForumsList = res.data;
-  //       let discussionSubForums = discussionList;
+  //     // axios.get(`${HOST}api/subforums/`)
+  //     //   .then(res => {
+  //     //     console.log(res.data)
+  //     //     let subForumsList = res.data;
+  //     //     let discussionSubForums = discussionList;
 
-  //       for (let n = 0; n < subForumsList.length; n++) {
+  //     //     for (let n = 0; n < subForumsList.length; n++) {
 
-  //         for (let i = 0; i < discussionSubForums.length; i++) {
-  //           if (discussionSubForums[i]['subforum'] === subForumsList[n]['id']) {
-  //             discussionSubForums[i].subForumName = subForumsList[n]['name'];
-  //           }
-  //         }
-  //       }
-  //       updateDiscussionList(discussionSubForums)
-  //     }).catch(err => {
-  //       console.log(err)
-  //     });
+  //     //       for (let i = 0; i < discussionSubForums.length; i++) {
+  //     //         if (discussionSubForums[i]['subforum'] === subForumsList[n]['id']) {
+  //     //           discussionSubForums[i].subForumName = subForumsList[n]['name'];
+  //     //         }
+  //     //       }
+  //     //     }
+  //     //     updateDiscussionList(discussionSubForums)
+  //     //   }).catch(err => {
+  //     //     console.log(err)
+  //     //   });
+  //   }
   // }, [discussionList]);
 
   //Uncomment code up

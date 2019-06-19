@@ -4,8 +4,8 @@ import {
   Icon, IconButton
 } from '@material-ui/core';
 import { styles } from './SubForm.style';
-import Discussions from '../../Modules/Discussions';
-import SortBy from '../../PersistentComponents/SortBy/SortBy';
+import Discussions from '../../Modules/DiscussionsList';
+import SortBy from '../../Modules/SortBy';
 import { Link } from 'react-router-dom';
 import Followers from './Followers';
 

@@ -3,7 +3,7 @@ import {
   withStyles, Grid, Typography, Avatar, Button, Card,
   CardMedia
 } from '@material-ui/core';
-import { styles } from './DiscussionPage.style';
+import { styles } from './Discussion.style';
 import logo from '../../../Assets/images/logo.png';
 
 export default withStyles(styles)(props => {

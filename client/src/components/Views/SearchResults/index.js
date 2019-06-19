@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withStyles, Typography } from '@material-ui/core';
 import { useGlobal } from 'reactn';
 import { styles } from './SearchResults.style';
-import Discussions from '../../Modules/Discussions/';
+import Discussions from '../../Modules/DiscussionsList';
 
 export default withStyles(styles)(props => {
 

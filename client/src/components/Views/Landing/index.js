@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core';
 import TopDiscussionsContainer from './TopDiscussionsContainer';
-import { styles } from './LandingPage.style.js';
+import { styles } from './Landing.style'
 
 
 export default withStyles(styles)(props => {

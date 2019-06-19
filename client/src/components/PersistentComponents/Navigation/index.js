@@ -5,11 +5,11 @@ import {
   List, ListItem, ListItemText, Divider, Button
 } from '@material-ui/core';
 import { styles, useStyles } from './Navigation.style.js';
-import SearchBar from '../SearchBar/SearchBar';
-import SignIOU from '../SignIOU/SignIOU';
+import SearchBar from '../../Modules/SearchBartentComponents/SearchBar';
+import SignIOU from '../../PersistentComponents/SignIOU/SignIOU';
 import { Link } from 'react-router-dom';
 import logo from '../../../Assets/images/logo.png';
-import CreateDiscussion from '../../Modules/DiscussionModal/CreateDiscussion'
+import CreateDiscussion from '../DiscussionModal/CreateDiscussionn'
 import { useGlobal } from 'reactn'
 
 

@@ -1,11 +1,11 @@
 export const styles = {
     container:{
         margin: '200px auto',
-        border: '1px solid green',
+        // border: '1px solid green',
         width: '90%'
     },
     header:{
-        border: '1px solid black',
+        // border: '1px solid black',
         margin: '20px auto', 
         justifyContent: 'space-between'
     },

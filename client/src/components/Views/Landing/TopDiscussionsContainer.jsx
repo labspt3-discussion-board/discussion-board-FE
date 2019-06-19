@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Typography } from '@material-ui/core';
 import { useGlobal } from 'reactn';
-import axios from 'axios';
-import HOST from '../../../Host';
-import SortBy from '../../PersistentComponents/SortBy/SortBy';
-import Discussions from '../../Modules/Discussions/';
+import SortBy from '../../Modules/SortBy';
+import Discussions from '../../Modules/DiscussionsList';
 
 export default props => {
   const { classes } = props;

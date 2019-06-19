@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useGlobal } from 'reactn';
-import axios from 'axios';
-import moment from 'moment';
 import LazyLoad from 'react-lazyload';
 import { Typography, Icon, CircularProgress } from '@material-ui/core'
 
-import HOST from '../../../Host';
+import HOST from '../../../Host/Host';
 
 const Loading = () => {
   return (
