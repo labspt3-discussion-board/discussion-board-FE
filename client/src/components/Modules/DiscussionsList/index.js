@@ -38,12 +38,18 @@ export default withStyles(styles)(props => {
       axios.get(`${HOST}api/${props.discListType}/`)
         .then(res => {
           console.log(res.data)
-          updateDiscussionList(res.data.results)
+          updateDiscussionList(res.data.results);
         }).catch(err => {
           console.log(err);
         });
-    }else if(props.discListType === 'subforums'){
-      console.log(props)
+    } else if (props.discListType === 'subforums') {
+      axios.get(`${HOST}api/${props.discListType}/${props.subforum}/discussions/`)
+        .then(res => {
+          console.log(res.data)
+          updateDiscussionList(res.data.results);
+        }).catch(err => {
+          console.log(err)
+        });
     }
   }, [])
 
