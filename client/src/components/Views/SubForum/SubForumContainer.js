@@ -24,12 +24,14 @@ export default withStyles(styles)(props => {
     }
   }
 
+  console.log(props)
+
   //will make axios call and input subtopic id from url params
   return (
     
     <Grid container className={classes.subForumContainer}>
       <Grid className={classes.subForumTop} container justify="space-between">
-        <Typography variant="h3">/d/SubForm</Typography>
+        <Typography variant="h3">/d/SubForum</Typography>
         <Button variant="contained" color='secondary'>Join!</Button>
         <ButtonGroup variant="contained">
           <Button onClick={(e) => handleHide('discussions', e)}>Discussions</Button>
