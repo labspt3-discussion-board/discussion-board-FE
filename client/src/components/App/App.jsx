@@ -1,16 +1,18 @@
-import React, { Component, }                           from 'react';
-import CssBaseline                                     from '@material-ui/core/CssBaseline';
-import { Login, Register, LandingPage,
-         Navigation, LoginMessageModal, 
-         NewSubforumModal,
-         }              from '../components.js';
-import { library }                                     from '@fortawesome/fontawesome-svg-core';
-import { faSignInAlt, faUserAlt, }                     from '@fortawesome/free-solid-svg-icons';
-import { fab, }                                        from '@fortawesome/free-brands-svg-icons';
-import { BrowserRouter as Router, Route, Link }        from "react-router-dom";
-import Cookies                                         from 'js-cookie';
-import Axios                                           from 'axios';
-import { HOST, CLIENT, }                                       from '../../constants.js';
+import React, { Component, } from 'react';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import {
+  Login, Register, Landing,
+  Navigation, LoginMessageModal,
+  NewSubforumModal, SearchResults, Discussion,
+  SubForum
+} from '../components.js';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faSignInAlt, faUserAlt, } from '@fortawesome/free-solid-svg-icons';
+import { fab, } from '@fortawesome/free-brands-svg-icons';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Cookies from 'js-cookie';
+import Axios from 'axios';
+import { HOST, CLIENT, } from '../../constants.js';
 
 library.add(faSignInAlt, faUserAlt, fab);
 
@@ -80,27 +82,27 @@ class App extends Component {
   }
 
   handleLogin = (e, formData) => {
-		e.preventDefault();
+    e.preventDefault();
 
-		Axios({
-			url: `${ HOST }api/users/login/`,
-			method: 'post',
-			data: {
-				username: formData.email.value,
-				password: formData.password.value,
-			}
-		}).then(res => {
+    Axios({
+      url: `${HOST}api/users/login/`,
+      method: 'post',
+      data: {
+        username: formData.email.value,
+        password: formData.password.value,
+      }
+    }).then(res => {
 
       if (res.data.user) {
         const user = {
-          id:        res.data.user.id,
+          id: res.data.user.id,
           firstName: res.data.user.first_name,
-          lastName:  res.data.user.last_name,
-          email:     res.data.user.email,
-          username:  res.data.user.username,
-          premium:   res.data.user.premium,
+          lastName: res.data.user.last_name,
+          email: res.data.user.email,
+          username: res.data.user.username,
+          premium: res.data.user.premium,
           avatarImg: res.data.user.avatar_img,
-          loggedIn:  true,
+          loggedIn: true,
         }
 
         setTimeout(() => {
@@ -119,65 +121,65 @@ class App extends Component {
         localStorage.setItem('LAMBDA_FORUM_AUTH_TOKEN', res.data.token);
       }
 
-		}).catch(err => console.log(err));
+    }).catch(err => console.log(err));
 
   }
-  
+
   handleLogout = e => {
 
-   Axios({
-     url: `${ HOST }api/users/logout/`,
-     method: 'get',
-     headers: {
-       'Authorization': 'Token ' + localStorage.getItem('LAMBDA_FORUM_AUTH_TOKEN'),
-     }
-   }).then(res => {
-    
-    const user = {
-      id:        '',
-      firstName: '',
-      lastName:  '',
-      email:     '',
-      username:  '',
-      premium:   '',
-      loggedIn:  false,
-    }
+    Axios({
+      url: `${HOST}api/users/logout/`,
+      method: 'get',
+      headers: {
+        'Authorization': 'Token ' + localStorage.getItem('LAMBDA_FORUM_AUTH_TOKEN'),
+      }
+    }).then(res => {
 
-    this.setState({
-      user,
-    });
+      const user = {
+        id: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        username: '',
+        premium: '',
+        loggedIn: false,
+      }
 
-    localStorage.removeItem('LAMBDA_FORUM_AUTH_TOKEN');
-    localStorage.removeItem('avatarImg');
+      this.setState({
+        user,
+      });
 
-   }).catch(err => console.log(err));
+      localStorage.removeItem('LAMBDA_FORUM_AUTH_TOKEN');
+      localStorage.removeItem('avatarImg');
+
+    }).catch(err => console.log(err));
   }
 
   handleRegister = (e, formData) => {
-		e.preventDefault();
+    e.preventDefault();
 
-		Axios({
-			url: HOST + 'api/users/register/',
-			method: 'post',
-			withCredentials: true,
-			data: {
-				firstName: formData.firstName.value,
-				lastName:  formData.lastName.value,
-				email:     formData.email.value,
-				username:  formData.username.value,
-				password:  formData.password.value,
-			}
-		}).then(res => {
+    Axios({
+      url: HOST + 'api/users/register/',
+      method: 'post',
+      withCredentials: true,
+      data: {
+        firstName: formData.firstName.value,
+        lastName: formData.lastName.value,
+        email: formData.email.value,
+        username: formData.username.value,
+        password: formData.password.value,
+      }
+    }).then(res => {
 
-			if (res.data.user) {
+      if (res.data.user) {
         const user = {
-          id:        res.data.user.id,
+          id: res.data.user.id,
           firstName: res.data.user.first_name,
-          lastName:  res.data.user.last_name,
-          email:     res.data.user.email,
-          username:  res.data.user.username,
-          premium:   res.data.user.premium,
-          loggedIn:  true,
+          lastName: res.data.user.last_name,
+          email: res.data.user.email,
+          username: res.data.user.username,
+          premium: res.data.user.premium,
+          loggedIn: true,
         }
 
         setTimeout(() => {
@@ -196,9 +198,9 @@ class App extends Component {
         localStorage.setItem('LAMBDA_FORUM_AUTH_TOKEN', res.data.token);
       }
 
-		}).catch(err => console.log(err));
+    }).catch(err => console.log(err));
 
-	}
+  }
 
   setUserState = user => {
     this.setState({ ...this.state, user, });
@@ -212,7 +214,7 @@ class App extends Component {
 
       if (loggedIn) {
 
-        window.location = `${ CLIENT }`
+        window.location = `${CLIENT}`
 
         // this.setState({
         //   loginMessageModal: {
@@ -249,24 +251,24 @@ class App extends Component {
     }
 
     Axios({
-      url: `${ HOST }api/users/login/check/`,
+      url: `${HOST}api/users/login/check/`,
       method: 'get',
       // withCredentials: true,
       headers: {
         'Authorization': 'Token ' + localStorage.getItem('LAMBDA_FORUM_AUTH_TOKEN'),
       }
     }).then(res => {
-     
+
       if (res.data.user) {
         const user = {
           ...this.state.user,
-          id:        res.data.user.id,
+          id: res.data.user.id,
           firstName: res.data.user.first_name,
-          lastName:  res.data.user.last_name,
-          email:     res.data.user.email,
-          username:  res.data.user.username,
-          premium:   res.data.user.premium,
-          loggedIn:  true,
+          lastName: res.data.user.last_name,
+          email: res.data.user.email,
+          username: res.data.user.username,
+          premium: res.data.user.premium,
+          loggedIn: true,
         }
 
         this.setState({
@@ -276,12 +278,12 @@ class App extends Component {
       } else {
         this.setUserState({
           user: {
-            id:        '',
+            id: '',
             firstName: '',
-            lastName:  '',
-            email:     '',
-            username:  '',
-            premium:   '',
+            lastName: '',
+            email: '',
+            username: '',
+            premium: '',
           },
           loggedIn: false,
         });
@@ -303,46 +305,64 @@ class App extends Component {
         <CssBaseline />
 
         <Navigation
-          { ...this.state }
-          handleLoginModal={ this.handleLoginModal }
-          handleLogout={ this.handleLogout }
-          setUserState={ this.setUserState }
-          handleModalOpen={ this.handleModalOpen }
+          {...this.state}
+          handleLoginModal={this.handleLoginModal}
+          handleLogout={this.handleLogout}
+          setUserState={this.setUserState}
+          handleModalOpen={this.handleModalOpen}
         />
 
         <LoginMessageModal
-          { ...this.state }
-          handleLoginMessageModal={ this.handleLoginMessageModal }
+          {...this.state}
+          handleLoginMessageModal={this.handleLoginMessageModal}
         />
 
-        <NewSubforumModal 
-          { ...this.state }
-          handleModalOpen={ this.handleModalOpen }
+        <NewSubforumModal
+          {...this.state}
+          handleModalOpen={this.handleModalOpen}
         />
 
-        <Login 
-          { ...this.state } 
-          handleLoginModal={ this.handleLoginModal }
-          handleLogin={ this.handleLogin }
+        <Login
+          {...this.state}
+          handleLoginModal={this.handleLoginModal}
+          handleLogin={this.handleLogin}
         />
 
         <Route path="/" exact render={() => {
           return (
-            <LandingPage
-              handleLoginModal={ this.handleLoginModal }
+            <Landing
+              handleLoginModal={this.handleLoginModal}
             />)
-          }}
+        }}
         />
 
         <Route path="/register/" render={() => {
           return (
-            <Register 
-              handleLoginModal={ this.handleLoginModal }
-              setUserState={ this.setUserState }
-              handleRegister={ this.handleRegister }
+            <Register
+              handleLoginModal={this.handleLoginModal}
+              setUserState={this.setUserState}
+              handleRegister={this.handleRegister}
             />)
-          }} 
+        }}
         />
+
+        <Route
+          exact path="/searchResults/:input/"
+          component={SearchResults}
+        />
+
+        <Route
+          exact path='/f/:id/discussion/:id/'
+          component={Discussion}
+        />
+
+        <Route
+          exact path='/f/:id/'
+          component={SubForum}
+        />
+
+
+
       </Router>
     );
   }
