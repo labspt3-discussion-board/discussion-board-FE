@@ -5,6 +5,7 @@ export default () => {
   setGlobal({
     discussionList: [],
     openModal: false,
-    drawerState: false
+    drawerState: false,
+    members: []
   });
 }

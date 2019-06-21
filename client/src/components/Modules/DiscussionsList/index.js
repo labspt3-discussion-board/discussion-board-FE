@@ -138,17 +138,8 @@ export default withStyles(styles)(props => {
 
   return (
     <>
-      {/* {props.view === 'subForum' ?
-        <>
-          <Grid container className={classes.createDiscussion}>
-            <IconButton onClick={handleOpenModal}>
-              <Icon >create</Icon>
-            </IconButton>
-          </Grid>
-          <DiscussionModal />
-        </>
-        : null
-      } */}
+      {/* Can add additional condition as long as discussionList
+      does not have a prop called subForumName, don't run */}
       {discussionList.length !== 0 ? discussionList.map((discussion, index) => {
         return (
           <LazyLoad key={index} placeholder={<Loading />}>
@@ -162,9 +153,11 @@ export default withStyles(styles)(props => {
                 <Grid container className={props.classes.topDiscussionContainer}>
                   <Typography variant="h6" component="h3" className={props.classes.discussionTitle}>{discussion.title}</Typography>
                   <Link to={`/f/${discussion.subforum}`}>
-                    <Typography variant="caption" className={props.classes.subForum}>{`/f/${discussion.subForumName}`}</Typography>
+                    {/* change back to subForumName */}
+                    <Typography variant="caption" className={props.classes.subForum}>{`/f/${discussion.subforum}`}</Typography>
                   </Link>
-                  <Typography variant="body" >{` Posted by ${discussion.ownerName} - ${moment(discussion.created_at).fromNow()}`}</Typography>
+                  {/* Change back to ownerName */}
+                  <Typography variant="body" >{` Posted by ${discussion.owner} - ${moment(discussion.created_at).fromNow()}`}</Typography>
                   <Typography>{discussion.description}</Typography>
                 </Grid>
               </Link>

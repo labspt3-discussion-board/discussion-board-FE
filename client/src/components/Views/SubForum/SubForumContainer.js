@@ -4,6 +4,7 @@ import {
   Icon, IconButton
 } from '@material-ui/core';
 import axios from 'axios';
+import { useGlobal } from 'reactn'
 import { styles } from './SubForm.style';
 import DiscussionsList from '../../Modules/DiscussionsList';
 import SortBy from '../../Modules/SortBy';
@@ -16,6 +17,7 @@ export default withRouter(withStyles(styles)(props => {
   const [hideDiscussions, updateHideDiscussions] = useState(false);
   const [hideFollowers, updateHideFollowers] = useState(true);
   const [subForum, updateSubForum] = useState({});
+  const [members, updateMembers] = useGlobal('members');
 
   const handleHide = (view, e) => {
     if (view === 'discussions') {
@@ -28,10 +30,19 @@ export default withRouter(withStyles(styles)(props => {
   }
 
   useEffect(() => {
+    //Call for subforum name
     axios.get(`${HOST}api/subforums/${props.match.params.id}/`)
     .then(res => {
       console.log(res.data)
       updateSubForum(res.data);
+    }).catch(err => {
+      console.log(err)
+    });
+
+    //Call for subforum members
+    axios.get(`${HOST}api/subforums/${props.match.params.id}/members/`)
+    .then(res => {
+      updateMembers(res.data.results)
     }).catch(err => {
       console.log(err)
     });

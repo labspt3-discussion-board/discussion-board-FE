@@ -1,33 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { withStyles, Grid, List, ListItem, 
-  ListItemAvatar, Avatar, ListItemText } from '@material-ui/core';
+  ListItemAvatar, Avatar, ListItemText, CircularProgress } from '@material-ui/core';
+import { useGlobal } from 'reactn';
 import { styles } from './SubForm.style';
 import logo from '../../../Assets/images/logo.png';
 
 export default withStyles(styles)(props => {
   const { classes } = props;
+  const [Members, updateMembers] = useGlobal('members');
 
-  const dummydata = 
-  [{ username: 'Duke Nukem' },
-  { username: 'Black Swordsman' },
-  {username: 'Chocolate Rain'}
-  ];
-
-  const [followers, updateFollowers] = useState(dummydata);
+  console.log(Members)
 
   return(
     <Grid container>
       <List>
-        {followers.length > 0 ? followers.map((follower, index) => {
+        {Members.length !== 0 ? Members.map((Member, index) => {
           return(
           <ListItem key={index}>
             <ListItemAvatar>
               <Avatar alt="user avatar" src={logo} />
             </ListItemAvatar>
-            <ListItemText primary={follower.username}/>
+            <ListItemText primary={Member.username}/>
           </ListItem>
           )
-        }): '...Loading'}
+        }): 
+        <CircularProgress color="secondary"/>}
       </List>
     </Grid>
   )
