@@ -42,25 +42,62 @@ export const styles = {
 	},
 	discussionListContainer: {
 		padding: '25px 35px',
-		height: '800px',
+		// height: '800px',
+		// border: '1px solid black',
 	},
 	addDiscussionContainer: {
 		display: 'flex',
 		alignItems: 'center',
+		// border: '1px solid black',
+		maxWidth: '340px',
+		cursor: 'pointer',
+		margin: '25px auto',
 	},
 	addDiscussionIconContainer: {
 		// border: '1px solid black',
 		display: 'flex',
 		justifyContent: 'center',
-		width: '75px',
-		height: '50px',
+		width: '100px',
+		height: '72px',
 		padding: '0px',
+		marginRight: '20px',
 	},
 	addDiscussionIcon: {
-		fontSize: '50px',
+		fontSize: '70px',
 		margin: '0px',
 		color: '#212121',
 		// border: '1px solid black',
 	},
+	discussionList: {
+		listStyleType: 'none',
+		padding: '0px',
+	},
+	discussionContainer: {
+		// border: '1px solid black',
+		display: 'flex',
+	},
+	thumbnail: {
+		width: '100px',
+		height: '100px',
+		borderRadius: '3px',
+	},
+	discussionData: {
+		// border: '1px solid black',
+		marginLeft: '15px',
+	},
+	commentCount: {
+		display: 'flex',
+		flexDirection: 'column',
+		height: '60px',
+		// border: '1px solid black',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		alignSelf: 'center',
+		marginLeft: 'auto',
+	},
+	discussionDivider: {
+		margin: '25px 0px',
+	},
+
 	
 };
