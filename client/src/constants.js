@@ -1,0 +1,12 @@
+// export const HOST = 'https://discussion-board-api.herokuapp.com/';
+export const HOST = 'https://discussion-board-api-test.herokuapp.com/';
+// export const HOST = 'http://localhost:8000/';
+export const GOOGLE_OAUTH_ID = '130566779551-v17nearo6de2ptv1fnob3uppt0thpasf.apps.googleusercontent.com';
+export const FACEBOOK_OAUTH_ID = '2805826072793210';
+// export const GOOGLE_OAUTH_REDIRECT_URI = 'http://localhost:8000/api/users/oauth/google/';
+export const GOOGLE_OAUTH_REDIRECT_URI = 'https://discussion-board-api-test.herokuapp.com/api/users/oauth/google/';
+// export const GOOGLE_OAUTH_REDIRECT_URI = 'https://discussion-board-api.herokuapp.com/api/users/oauth/google/';
+export const FACEBOOK_OAUTH_REDIRECT_URI = 'https://discussion-board-api-test.herokuapp.com/api/users/oauth/facebook/';
+// export const CLIENT = 'http://localhost:3000/'
+export const CLIENT = 'https://lambda-discussion-board-test.herokuapp.com/'
+// export const CLIENT = 'https://lambda-discussion-board.herokuapp.com/'
