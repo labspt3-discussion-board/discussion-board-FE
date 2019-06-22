@@ -31,8 +31,6 @@ export default withStyles(styles)(props => {
   const [discussionList, updateDiscussionList] = useGlobal('discussionList');
   const [upvoteState, updateUpvoteState] = useGlobal('upvoteState');
   const [downvoteState, updateDownvoteState] = useGlobal('downvoteState');
-  const [upvoteColor, updateUpvoteColor] = useGlobal('');
-  const [downvoteColor, updateDownvoteColor] = useGlobal('');
 
   console.log(discussionList)
   const { classes } = props;
@@ -203,7 +201,7 @@ export default withStyles(styles)(props => {
         return (
           <LazyLoad key={index} placeholder={<Loading />}>
             <Card raised="true" key={index} className={props.classes.discussion}>
-              <Link className={props.classes.clickableCard} to={`/f/${1}/discussion/${1}`}>
+              <Link className={props.classes.clickableCard} to={`/f/${discussion.subforum}/discussion/${discussion.id}/`}>
                 <CardMedia
                   className={props.classes.discussionImg}
                   image={logo}

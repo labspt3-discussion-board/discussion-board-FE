@@ -31,7 +31,7 @@ export default withRouter(withStyles(styles)(props => {
 
   useEffect(() => {
     //Call for subforum name
-    axios.get(`${HOST}api/subforums/${props.match.params.id}/`)
+    axios.get(`${HOST}api/subforums/${props.match.params.subforumId}/`)
     .then(res => {
       console.log(res.data)
       updateSubForum(res.data);
@@ -40,7 +40,7 @@ export default withRouter(withStyles(styles)(props => {
     });
 
     //Call for subforum members
-    axios.get(`${HOST}api/subforums/${props.match.params.id}/members/`)
+    axios.get(`${HOST}api/subforums/${props.match.params.subforumId}/members/`)
     .then(res => {
       updateMembers(res.data.results)
     }).catch(err => {
@@ -64,7 +64,7 @@ export default withRouter(withStyles(styles)(props => {
         <SortBy classes={classes} />
       </Grid>
       {!hideDiscussions ?
-        <DiscussionsList discListType='subforums' subforum={props.match.params.id} />
+        <DiscussionsList discListType='subforums' subforum={props.match.params.subforumId} />
         : null}
       {!hideFollowers ?
       <Members />
