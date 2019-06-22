@@ -29,6 +29,10 @@ const Loading = () => {
 
 export default withStyles(styles)(props => {
   const [discussionList, updateDiscussionList] = useGlobal('discussionList');
+  const [upvoteState, updateUpvoteState] = useGlobal('upvoteState');
+  const [downvoteState, updateDownvoteState] = useGlobal('downvoteState');
+  const [upvoteColor, updateUpvoteColor] = useGlobal('');
+  const [downvoteColor, updateDownvoteColor] = useGlobal('');
 
   console.log(discussionList)
   const { classes } = props;
@@ -98,7 +102,7 @@ export default withStyles(styles)(props => {
   //Uncomment code up
 
 
-  const handleVote = (discId, voteType, e) => {
+  const handleVote = (discId, prevVoteNum, voteType, upvoteState, downvoteState, e) => {
 
     if (voteType === 'upvote') {
       //after modifying data have to update state with new call
@@ -108,33 +112,88 @@ export default withStyles(styles)(props => {
       // }).catch(err => {
       //   console.log(err)
       // });
-      console.log(discId)
-    } else {
-      console.log(discId)
+      if (!upvoteState.includes(discId) && !downvoteState.includes(discId)) {
+        let copyState = upvoteState;
+        copyState.push(discId);
+        updateUpvoteState(copyState);
+        //axios call to add upvote to discussion
+
+        // axios.put(`${HOST}api/discussions/${discId}/`, {upvote: prevVoteNum + 1 })
+        // .then(res => {
+        //   console.log(res)
+        // }).catch(err => {
+        //   console.log(err)
+        // });
+      } else if (upvoteState.includes(discId) && !downvoteState.includes(discId)) {
+        let filterUpvoteState = upvoteState.filter((value, index, arr) => {
+          return value !== discId;
+        });
+        updateUpvoteState(filterUpvoteState)
+        //axios call to remove upvote from discussion
+
+        // axios.put(`${HOST}api/discussions/${discId}/`, {upvote: prevVoteNum -1 })
+        // .then(res => {
+        //   console.log(res)
+        // }).catch(err => {
+        //   console.log(err)
+        // });
+      } else if (!upvoteState.includes(discId) && downvoteState.includes(discId)) {
+        //axios call to remove downvote
+        let filterDownvoteState = downvoteState.filter((value, index, arr) => {
+          return value !== discId;
+        });
+        updateDownvoteState(filterDownvoteState);
+
+        //axios call to add upvote
+
+        let copyState = upvoteState;
+        copyState.push(discId);
+        updateUpvoteState(copyState);
+
+      }
+    } else if (voteType === 'downvote') {
+      if (!downvoteState.includes(discId) && !upvoteState.includes(discId)) {
+        let copyState = downvoteState;
+        copyState.push(discId);
+        updateDownvoteState(copyState);
+        //axios call to add downvote to discussion
+
+      } else if (downvoteState.includes(discId) && !upvoteState.includes(discId)) {
+
+        let filterDownvoteState = downvoteState.filter((value, index, arr) => {
+          return value !== discId;
+        });
+        updateDownvoteState(filterDownvoteState)
+
+        //axios call to remove downvote from discussion
+
+      } else if (!downvoteState.includes(discId) && upvoteState.includes(discId)) {
+
+        //axios call to remove upvote
+
+        let filterUpvoteState = upvoteState.filter((value, index, arr) => {
+          return value !== discId;
+        });
+        updateUpvoteState(filterUpvoteState);
+
+        //axios call to add downvote
+
+        let copyState = downvoteState;
+        copyState.push(discId);
+        updateDownvoteState(copyState);
+
+      }
+
+
 
     }
 
     //Going to separate into its own file.
-
-    //axios call to add to upvote/downvote
-
-    //   axios.put(`${HOST}api/topdiscussions/`)
-    //     .then(res => {
-    //       console.log(res.data)
-    //       updateDiscussionList(res.data)
-    //     }).catch(err => {
-    //       console.log(err);
-    //     })
-
     //axios call to update discussion state
     //Will update state specific to current view by passing in a prop string
     //that will identify current view being used and then set up conditionals
     //to initiate correct axios call. ex. top discussions vs subForum discussions
   }
-
-  // const handleOpenModal = () => {
-  //   updateOpenModal(true);
-  // };
 
   return (
     <>
@@ -170,7 +229,9 @@ export default withStyles(styles)(props => {
                   <Grid container direction="column">
                     {/* Add conditional to make one button have color based on
                     whether user voted */}
-                    <IconButton className={props.classes.upvoteBtn} name="upvote" onClick={(e) => handleVote(discussion.id, 'upvote', e)}>
+
+                    <IconButton className={upvoteState.includes(discussion.id) ? props.classes.upvoteBtn : null}
+                      name="upvote" onClick={(e) => handleVote(discussion.id, discussion.upvote, 'upvote', upvoteState, downvoteState, e)}>
                       <Icon>arrow_upward</Icon>
                     </IconButton>
                     <Votes
@@ -179,7 +240,8 @@ export default withStyles(styles)(props => {
                       netUpvote={props.classes.netUpvote}
                       netDownvote={props.classes.netDownvote}
                     />
-                    <IconButton className={props.classes.downvoteBtn} name="downvote" onClick={(e) => handleVote(discussion.id, 'downvote', e)}>
+                    <IconButton className={downvoteState.includes(discussion.id) ? props.classes.downvoteBtn : null}
+                      name="downvote" onClick={(e) => handleVote(discussion.id, discussion.downvote, 'downvote', upvoteState, downvoteState, e)}>
                       <Icon>arrow_downward</Icon>
                     </IconButton>
                   </Grid>
