@@ -1,13 +1,13 @@
 /* Module will be used for landing page, 
 search results page, subtopic page, etc. 
 Basically whenever a list of discussions need to be displayed*/
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import LazyLoad from 'react-lazyload';
 import {
   withStyles, Card, CardMedia,
   Typography, CircularProgress,
-  Icon, Grid, IconButton
+  Icon, Grid, IconButton, Button
 } from '@material-ui/core';
 import moment from 'moment';
 import axios from 'axios';
@@ -18,6 +18,7 @@ import { styles } from './DiscussionsList.style';
 import Votes from '../Votes'
 
 import { HOST } from '../../../constants';
+import { number } from 'prop-types';
 
 const Loading = () => {
   return (
@@ -31,6 +32,9 @@ export default withStyles(styles)(props => {
   const [discussionList, updateDiscussionList] = useGlobal('discussionList');
   const [upvoteState, updateUpvoteState] = useGlobal('upvoteState');
   const [downvoteState, updateDownvoteState] = useGlobal('downvoteState');
+  const [nextList, updateNextList] = useState([]);
+  const [discussionCount, updateDiscussionCount] = useState(0);
+  const [pageNumbers, updatePageNumbers] = useState(0);
 
   console.log(discussionList)
   const { classes } = props;
@@ -41,6 +45,17 @@ export default withStyles(styles)(props => {
         .then(res => {
           console.log(res.data)
           updateDiscussionList(res.data.results);
+          // const tempList = nextList;
+          // tempList.push(res.data.next);
+          // updateNextList(tempList);
+          updateDiscussionCount(res.data.count);
+
+          const roundedPageNumber = Math.ceil(res.data.count / 50);
+          let placeholderPageNumbers = [];
+          for (let i = roundedPageNumber; i > 0; i--) {
+            placeholderPageNumbers.unshift(i);
+          }
+          updatePageNumbers(placeholderPageNumbers);
         }).catch(err => {
           console.log(err);
         });
@@ -193,6 +208,27 @@ export default withStyles(styles)(props => {
     //to initiate correct axios call. ex. top discussions vs subForum discussions
   }
 
+  const handleNextList = (num) => {
+    // "https://discussion-board-api-test.herokuapp.com/api/topdiscussions/?page=2"
+    console.log(num)
+    if (num === 1) {
+      axios.get(`${HOST}api/${props.discListType}/`)
+        .then(res => {
+          updateDiscussionList(res.data.results)
+        }).catch(err => {
+          console.log(err);
+        });
+    } else {
+      axios.get(`${HOST}api/${props.discListType}/?page=${num}`)
+        .then(res => {
+          updateDiscussionList(res.data.results)
+          console.log(res)
+        }).catch(err => {
+          console.log(err);
+        });
+    }
+  }
+
   return (
     <>
       {/* Can add additional condition as long as discussionList
@@ -254,6 +290,19 @@ export default withStyles(styles)(props => {
           <CircularProgress color="secondary" />
         </Grid>
       }
+      {/* {nextList.length !== 0 ? nextList.map(list => {
+        return(
+          <Button onClick={(e) => handleNextList(e)}></Button>
+        )
+      }): 'Loading'} */}
+      {pageNumbers.length > 0 ? pageNumbers.map(pageNum => {
+        console.log('hiiiiii')
+        // for(let i = discussionCount, n = 2; i > 0; i=i-50, n++){
+        return (
+          <Button onClick={() => handleNextList(pageNum)}>{pageNum}</Button>
+        )
+        // }
+      }) : null}
     </>
   )
 })
