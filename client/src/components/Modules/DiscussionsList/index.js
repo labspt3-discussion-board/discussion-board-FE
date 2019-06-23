@@ -32,8 +32,6 @@ export default withStyles(styles)(props => {
   const [discussionList, updateDiscussionList] = useGlobal('discussionList');
   const [upvoteState, updateUpvoteState] = useGlobal('upvoteState');
   const [downvoteState, updateDownvoteState] = useGlobal('downvoteState');
-  const [nextList, updateNextList] = useState([]);
-  const [discussionCount, updateDiscussionCount] = useState(0);
   const [pageNumbers, updatePageNumbers] = useState(0);
 
   console.log(discussionList)
@@ -45,10 +43,6 @@ export default withStyles(styles)(props => {
         .then(res => {
           console.log(res.data)
           updateDiscussionList(res.data.results);
-          // const tempList = nextList;
-          // tempList.push(res.data.next);
-          // updateNextList(tempList);
-          updateDiscussionCount(res.data.count);
 
           const roundedPageNumber = Math.ceil(res.data.count / 50);
           let placeholderPageNumbers = [];
@@ -64,6 +58,13 @@ export default withStyles(styles)(props => {
         .then(res => {
           console.log(res.data)
           updateDiscussionList(res.data.results);
+
+          const roundedPageNumber = Math.ceil(res.data.count / 50);
+          let placeholderPageNumbers = [];
+          for (let i = roundedPageNumber; i > 0; i--) {
+            placeholderPageNumbers.unshift(i);
+          }
+          updatePageNumbers(placeholderPageNumbers);
         }).catch(err => {
           console.log(err)
         });
@@ -211,21 +212,39 @@ export default withStyles(styles)(props => {
   const handleNextList = (num) => {
     // "https://discussion-board-api-test.herokuapp.com/api/topdiscussions/?page=2"
     console.log(num)
-    if (num === 1) {
-      axios.get(`${HOST}api/${props.discListType}/`)
-        .then(res => {
-          updateDiscussionList(res.data.results)
-        }).catch(err => {
-          console.log(err);
-        });
-    } else {
-      axios.get(`${HOST}api/${props.discListType}/?page=${num}`)
-        .then(res => {
-          updateDiscussionList(res.data.results)
-          console.log(res)
-        }).catch(err => {
-          console.log(err);
-        });
+    if (props.discListType === 'topdiscussions') {
+      if (num === 1) {
+        axios.get(`${HOST}api/${props.discListType}/`)
+          .then(res => {
+            updateDiscussionList(res.data.results)
+          }).catch(err => {
+            console.log(err);
+          });
+      } else {
+        axios.get(`${HOST}api/${props.discListType}/?page=${num}`)
+          .then(res => {
+            updateDiscussionList(res.data.results)
+            console.log(res)
+          }).catch(err => {
+            console.log(err);
+          });
+      }
+    } else if (props.discListType === 'subforums') {
+      if (num === 1) {
+        axios.get(`${HOST}api/${props.discListType}/${props.subforum}/discussions/`)
+          .then(res => {
+            updateDiscussionList(res.data.results)
+          }).catch(err => {
+            console.log(err);
+          });
+      } else {
+        axios.get(`${HOST}api/${props.discListType}/${props.subforum}/discussions/?page=${num}`)
+          .then(res => {
+            updateDiscussionList(res.data.results)
+          }).catch(err => {
+            console.log(err);
+          });
+      }
     }
   }
 
@@ -296,12 +315,9 @@ export default withStyles(styles)(props => {
         )
       }): 'Loading'} */}
       {pageNumbers.length > 0 ? pageNumbers.map(pageNum => {
-        console.log('hiiiiii')
-        // for(let i = discussionCount, n = 2; i > 0; i=i-50, n++){
         return (
           <Button onClick={() => handleNextList(pageNum)}>{pageNum}</Button>
         )
-        // }
       }) : null}
     </>
   )
