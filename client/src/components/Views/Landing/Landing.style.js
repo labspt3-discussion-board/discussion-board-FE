@@ -39,7 +39,9 @@ export const styles = {
     justifyContent: 'space-between',
     margin: '10px 5%',
     width: '100%',
-    lineHeight: '1.2'
+    lineHeight: '1.2',
+    // border: '1px solid navy',
+    borderRadius: '4px'
   }, 
   discussionTitle: {
     fontWeight: 'bold',
@@ -60,6 +62,17 @@ export const styles = {
     fontWeight: 'bold',
     fontSize: '20px'
   },
-  logo: {
+  topDiscussionContainer: {
+    width: '80%'
+  },
+  votes: {
+    display: 'flex',
+    // border: '1px solid black',
+    alignSelf: 'baseline',
+    width: '100%',
+    justifyContent: 'space-between'
+  },
+  failedLoading:{
+    margin: '0px auto'
   }
 };
