@@ -33,6 +33,11 @@ export default withStyles(styles)(props => {
   const [upvoteState, updateUpvoteState] = useGlobal('upvoteState');
   const [downvoteState, updateDownvoteState] = useGlobal('downvoteState');
   const [pageNumbers, updatePageNumbers] = useState(0);
+  const [addUpvote, updateAddUpvote] = useState(0);
+  const [addDownvote, updateAddDownvote] = useState(0);
+  // const [currentUpvoteNum, updateCurrentUpvoteNum] = useState(0);
+  // const [currentDownvoteNum, updateCurrentDownvoteNum] = useState(0);
+
 
   console.log(discussionList)
   const { classes } = props;
@@ -118,89 +123,207 @@ export default withStyles(styles)(props => {
 
   const handleVote = (discId, prevVoteNum, voteType, upvoteState, downvoteState, e) => {
 
-    if (voteType === 'upvote') {
-      //after modifying data have to update state with new call
-      // axios.get(`${HOST}api/discussions/${1}/`)
-      // .then(res => {
-      //   console.log(res)
-      // }).catch(err => {
-      //   console.log(err)
-      // });
-      if (!upvoteState.includes(discId) && !downvoteState.includes(discId)) {
-        let copyState = upvoteState;
-        copyState.push(discId);
-        updateUpvoteState(copyState);
-        //axios call to add upvote to discussion
 
-        // axios.put(`${HOST}api/discussions/${discId}/`, {upvote: prevVoteNum + 1 })
+    axios({
+      method: 'get',
+      url: `${HOST}api/discussions/${discId}/`,
+    }).then(res => {
+      let currentUpvoteNum = res.data.upvote;
+      let currentDownvoteNum = res.data.downvote;
+      console.log(currentUpvoteNum);
+
+      if (voteType === 'upvote') {
+        //after modifying data have to update state with new call
+        // axios.get(`${HOST}api/discussions/${1}/`)
         // .then(res => {
         //   console.log(res)
         // }).catch(err => {
         //   console.log(err)
         // });
-      } else if (upvoteState.includes(discId) && !downvoteState.includes(discId)) {
-        let filterUpvoteState = upvoteState.filter((value, index, arr) => {
-          return value !== discId;
-        });
-        updateUpvoteState(filterUpvoteState)
-        //axios call to remove upvote from discussion
+        if (!upvoteState.includes(discId) && !downvoteState.includes(discId)) {
+          let copyState = upvoteState;
+          copyState.push(discId);
+          updateUpvoteState(copyState);
+          //axios call to add upvote to discussion
 
-        // axios.put(`${HOST}api/discussions/${discId}/`, {upvote: prevVoteNum -1 })
-        // .then(res => {
-        //   console.log(res)
-        // }).catch(err => {
-        //   console.log(err)
-        // });
-      } else if (!upvoteState.includes(discId) && downvoteState.includes(discId)) {
-        //axios call to remove downvote
-        let filterDownvoteState = downvoteState.filter((value, index, arr) => {
-          return value !== discId;
-        });
-        updateDownvoteState(filterDownvoteState);
+          // axios.put(`${HOST}api/discussions/${discId}/`, {upvote: prevVoteNum + 1 })
+          // .then(res => {
+          //   console.log(res)
+          // }).catch(err => {
+          //   console.log(err)
+          // });
 
-        //axios call to add upvote
+          // axios({
+          //   method: 'put',
+          //   url: `${HOST}api/discussions/${discId}/`,
+          //   withCredentials: true,
+          //   headers: {
+          //     'Authorization': 'Bearer ' + localStorage.getItem('LAMBDA_FORUM_AUTH_TOKEN'),
+          //   },
+          //   data: {
+          //     upvote: prevVoteNum + 1,
+          //   }
+          // }).then(res => {
+          //   console.log(res);
+          // }).catch(err => console.log(err));
+          console.log('Before:', prevVoteNum)
 
-        let copyState = upvoteState;
-        copyState.push(discId);
-        updateUpvoteState(copyState);
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              upvote: currentUpvoteNum + 1
+            }
+          }).then(res => {
+            console.log('After', res)
+          }).catch(err => {
+            console.log(err)
+          });
+          updateAddUpvote(1);
+
+        } else if (upvoteState.includes(discId) && !downvoteState.includes(discId)) {
+          let filterUpvoteState = upvoteState.filter((value, index, arr) => {
+            return value !== discId;
+          });
+          updateUpvoteState(filterUpvoteState)
+          //axios call to remove upvote from discussion
+
+          // axios.put(`${HOST}api/discussions/${discId}/`, {upvote: prevVoteNum -1 })
+          // .then(res => {
+          //   console.log(res)
+          // }).catch(err => {
+          //   console.log(err)
+          // });
+
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              upvote: currentUpvoteNum - 1
+            }
+          }).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          });
+
+          updateAddUpvote(0);
+
+        } else if (!upvoteState.includes(discId) && downvoteState.includes(discId)) {
+          //axios call to remove downvote
+          let filterDownvoteState = downvoteState.filter((value, index, arr) => {
+            return value !== discId;
+          });
+          updateDownvoteState(filterDownvoteState);
+          updateAddDownvote(0);
+
+          //axios call to add upvote
+
+          let copyState = upvoteState;
+          copyState.push(discId);
+          updateUpvoteState(copyState);
+          updateAddUpvote(1);
+
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              downvote: currentDownvoteNum - 1,
+              upvote: currentUpvoteNum + 1
+            }
+          }).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          });
+
+        }
+      } else if (voteType === 'downvote') {
+        if (!downvoteState.includes(discId) && !upvoteState.includes(discId)) {
+          let copyState = downvoteState;
+          copyState.push(discId);
+          updateDownvoteState(copyState);
+          //axios call to add downvote to discussion
+          updateAddDownvote(1);
+
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              downvote: currentDownvoteNum + 1
+            }
+          }).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          });
+
+        } else if (downvoteState.includes(discId) && !upvoteState.includes(discId)) {
+
+          let filterDownvoteState = downvoteState.filter((value, index, arr) => {
+            return value !== discId;
+          });
+          updateDownvoteState(filterDownvoteState)
+
+          //axios call to remove downvote from discussion
+          updateAddDownvote(0);
+
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              downvote: currentDownvoteNum - 1
+            }
+          }).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          });
+
+        } else if (!downvoteState.includes(discId) && upvoteState.includes(discId)) {
+
+          //axios call to remove upvote
+
+          let filterUpvoteState = upvoteState.filter((value, index, arr) => {
+            return value !== discId;
+          });
+          updateUpvoteState(filterUpvoteState);
+          updateAddUpvote(0);
+
+          //axios call to add downvote
+
+          let copyState = downvoteState;
+          copyState.push(discId);
+          updateDownvoteState(copyState);
+          updateAddDownvote(1);
+
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              upvote: currentUpvoteNum - 1,
+              downvote: currentDownvoteNum + 1
+            }
+          }).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          });
+
+        }
+
+
 
       }
-    } else if (voteType === 'downvote') {
-      if (!downvoteState.includes(discId) && !upvoteState.includes(discId)) {
-        let copyState = downvoteState;
-        copyState.push(discId);
-        updateDownvoteState(copyState);
-        //axios call to add downvote to discussion
-
-      } else if (downvoteState.includes(discId) && !upvoteState.includes(discId)) {
-
-        let filterDownvoteState = downvoteState.filter((value, index, arr) => {
-          return value !== discId;
-        });
-        updateDownvoteState(filterDownvoteState)
-
-        //axios call to remove downvote from discussion
-
-      } else if (!downvoteState.includes(discId) && upvoteState.includes(discId)) {
-
-        //axios call to remove upvote
-
-        let filterUpvoteState = upvoteState.filter((value, index, arr) => {
-          return value !== discId;
-        });
-        updateUpvoteState(filterUpvoteState);
-
-        //axios call to add downvote
-
-        let copyState = downvoteState;
-        copyState.push(discId);
-        updateDownvoteState(copyState);
-
-      }
 
 
 
-    }
+
+    }).catch(err => {
+      console.log(err)
+    });
+
+
 
     //Going to separate into its own file.
     //axios call to update discussion state
@@ -288,8 +411,8 @@ export default withStyles(styles)(props => {
                       <Icon>arrow_upward</Icon>
                     </IconButton>
                     <Votes
-                      upvote={discussion.upvote}
-                      downvote={discussion.downvote}
+                      upvote={discussion.upvote + addUpvote}
+                      downvote={discussion.downvote + addDownvote}
                       netUpvote={props.classes.netUpvote}
                       netDownvote={props.classes.netDownvote}
                     />

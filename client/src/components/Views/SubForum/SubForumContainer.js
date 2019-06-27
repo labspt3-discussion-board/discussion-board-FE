@@ -56,6 +56,7 @@ export default withRouter(withStyles(styles)(props => {
     <Grid container className={classes.subForumContainer}>
       <Grid className={classes.subForumTop} container justify="space-between">
         <Typography variant="h3">{`/f/${subForum.name}`}</Typography>
+        {/* // user, username, subtopic/subforum properties to give to axios  */}
         <Button variant="contained" color='secondary'>Join!</Button>
         <ButtonGroup variant="contained">
           <Button onClick={(e) => handleHide('discussions', e)}>Discussions</Button>
