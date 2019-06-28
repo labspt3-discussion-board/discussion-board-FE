@@ -1,6 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App/jsx/App';
+import { BrowserRouter as Router } from 'react-router-dom';
+import GlobalState from './Global State';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import App from './Components/App/App.jsx';
+
+GlobalState();
+
+
+
+ReactDOM.render(
+  <Router>
+    <App />
+  </Router>
+  , document.getElementById('root'));
 
