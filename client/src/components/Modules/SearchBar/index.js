@@ -10,7 +10,6 @@ const HOST = 'https://discussion-board-api.herokuapp.com/'
 
 export default withRouter(props => {
   const [searchValue, updateSearchValue] = useState('');
-  const [discussionList, updateDiscussionList] = useGlobal('discussionList');
 
   const handleInputChange = (e) => {
     updateSearchValue(e.target.value);

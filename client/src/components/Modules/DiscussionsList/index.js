@@ -1,13 +1,13 @@
 /* Module will be used for landing page, 
 search results page, subtopic page, etc. 
 Basically whenever a list of discussions need to be displayed*/
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import LazyLoad from 'react-lazyload';
 import {
   withStyles, Card, CardMedia,
   Typography, CircularProgress,
-  Icon, Grid, IconButton
+  Icon, Grid, IconButton, Button
 } from '@material-ui/core';
 import moment from 'moment';
 import axios from 'axios';
@@ -18,6 +18,7 @@ import { styles } from './DiscussionsList.style';
 import Votes from '../Votes'
 
 import { HOST } from '../../../constants';
+import { number } from 'prop-types';
 
 const Loading = () => {
   return (
@@ -29,6 +30,14 @@ const Loading = () => {
 
 export default withStyles(styles)(props => {
   const [discussionList, updateDiscussionList] = useGlobal('discussionList');
+  const [upvoteState, updateUpvoteState] = useGlobal('upvoteState');
+  const [downvoteState, updateDownvoteState] = useGlobal('downvoteState');
+  const [pageNumbers, updatePageNumbers] = useState(0);
+  const [addUpvote, updateAddUpvote] = useState(0);
+  const [addDownvote, updateAddDownvote] = useState(0);
+  // const [currentUpvoteNum, updateCurrentUpvoteNum] = useState(0);
+  // const [currentDownvoteNum, updateCurrentDownvoteNum] = useState(0);
+
 
   console.log(discussionList)
   const { classes } = props;
@@ -39,6 +48,13 @@ export default withStyles(styles)(props => {
         .then(res => {
           console.log(res.data)
           updateDiscussionList(res.data.results);
+
+          const roundedPageNumber = Math.ceil(res.data.count / 50);
+          let placeholderPageNumbers = [];
+          for (let i = roundedPageNumber; i > 0; i--) {
+            placeholderPageNumbers.unshift(i);
+          }
+          updatePageNumbers(placeholderPageNumbers);
         }).catch(err => {
           console.log(err);
         });
@@ -47,6 +63,13 @@ export default withStyles(styles)(props => {
         .then(res => {
           console.log(res.data)
           updateDiscussionList(res.data.results);
+
+          const roundedPageNumber = Math.ceil(res.data.count / 50);
+          let placeholderPageNumbers = [];
+          for (let i = roundedPageNumber; i > 0; i--) {
+            placeholderPageNumbers.unshift(i);
+          }
+          updatePageNumbers(placeholderPageNumbers);
         }).catch(err => {
           console.log(err)
         });
@@ -98,43 +121,255 @@ export default withStyles(styles)(props => {
   //Uncomment code up
 
 
-  const handleVote = (discId, voteType, e) => {
+  const handleVote = (discId, prevVoteNum, voteType, upvoteState, downvoteState, e) => {
 
-    if (voteType === 'upvote') {
-      //after modifying data have to update state with new call
-      // axios.get(`${HOST}api/discussions/${1}/`)
-      // .then(res => {
-      //   console.log(res)
-      // }).catch(err => {
-      //   console.log(err)
-      // });
-      console.log(discId)
-    } else {
-      console.log(discId)
 
-    }
+    axios({
+      method: 'get',
+      url: `${HOST}api/discussions/${discId}/`,
+    }).then(res => {
+      let currentUpvoteNum = res.data.upvote;
+      let currentDownvoteNum = res.data.downvote;
+      console.log(currentUpvoteNum);
+
+      if (voteType === 'upvote') {
+        //after modifying data have to update state with new call
+        // axios.get(`${HOST}api/discussions/${1}/`)
+        // .then(res => {
+        //   console.log(res)
+        // }).catch(err => {
+        //   console.log(err)
+        // });
+        if (!upvoteState.includes(discId) && !downvoteState.includes(discId)) {
+          let copyState = upvoteState;
+          copyState.push(discId);
+          updateUpvoteState(copyState);
+          //axios call to add upvote to discussion
+
+          // axios.put(`${HOST}api/discussions/${discId}/`, {upvote: prevVoteNum + 1 })
+          // .then(res => {
+          //   console.log(res)
+          // }).catch(err => {
+          //   console.log(err)
+          // });
+
+          // axios({
+          //   method: 'put',
+          //   url: `${HOST}api/discussions/${discId}/`,
+          //   withCredentials: true,
+          //   headers: {
+          //     'Authorization': 'Bearer ' + localStorage.getItem('LAMBDA_FORUM_AUTH_TOKEN'),
+          //   },
+          //   data: {
+          //     upvote: prevVoteNum + 1,
+          //   }
+          // }).then(res => {
+          //   console.log(res);
+          // }).catch(err => console.log(err));
+          console.log('Before:', prevVoteNum)
+
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              upvote: currentUpvoteNum + 1
+            }
+          }).then(res => {
+            console.log('After', res)
+          }).catch(err => {
+            console.log(err)
+          });
+          updateAddUpvote(1);
+
+        } else if (upvoteState.includes(discId) && !downvoteState.includes(discId)) {
+          let filterUpvoteState = upvoteState.filter((value, index, arr) => {
+            return value !== discId;
+          });
+          updateUpvoteState(filterUpvoteState)
+          //axios call to remove upvote from discussion
+
+          // axios.put(`${HOST}api/discussions/${discId}/`, {upvote: prevVoteNum -1 })
+          // .then(res => {
+          //   console.log(res)
+          // }).catch(err => {
+          //   console.log(err)
+          // });
+
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              upvote: currentUpvoteNum - 1
+            }
+          }).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          });
+
+          updateAddUpvote(0);
+
+        } else if (!upvoteState.includes(discId) && downvoteState.includes(discId)) {
+          //axios call to remove downvote
+          let filterDownvoteState = downvoteState.filter((value, index, arr) => {
+            return value !== discId;
+          });
+          updateDownvoteState(filterDownvoteState);
+          updateAddDownvote(0);
+
+          //axios call to add upvote
+
+          let copyState = upvoteState;
+          copyState.push(discId);
+          updateUpvoteState(copyState);
+          updateAddUpvote(1);
+
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              downvote: currentDownvoteNum - 1,
+              upvote: currentUpvoteNum + 1
+            }
+          }).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          });
+
+        }
+      } else if (voteType === 'downvote') {
+        if (!downvoteState.includes(discId) && !upvoteState.includes(discId)) {
+          let copyState = downvoteState;
+          copyState.push(discId);
+          updateDownvoteState(copyState);
+          //axios call to add downvote to discussion
+          updateAddDownvote(1);
+
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              downvote: currentDownvoteNum + 1
+            }
+          }).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          });
+
+        } else if (downvoteState.includes(discId) && !upvoteState.includes(discId)) {
+
+          let filterDownvoteState = downvoteState.filter((value, index, arr) => {
+            return value !== discId;
+          });
+          updateDownvoteState(filterDownvoteState)
+
+          //axios call to remove downvote from discussion
+          updateAddDownvote(0);
+
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              downvote: currentDownvoteNum - 1
+            }
+          }).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          });
+
+        } else if (!downvoteState.includes(discId) && upvoteState.includes(discId)) {
+
+          //axios call to remove upvote
+
+          let filterUpvoteState = upvoteState.filter((value, index, arr) => {
+            return value !== discId;
+          });
+          updateUpvoteState(filterUpvoteState);
+          updateAddUpvote(0);
+
+          //axios call to add downvote
+
+          let copyState = downvoteState;
+          copyState.push(discId);
+          updateDownvoteState(copyState);
+          updateAddDownvote(1);
+
+          axios({
+            method: 'patch',
+            url: `${HOST}api/discussions/${discId}/vote/`,
+            data: {
+              upvote: currentUpvoteNum - 1,
+              downvote: currentDownvoteNum + 1
+            }
+          }).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          });
+
+        }
+
+
+
+      }
+
+
+
+
+    }).catch(err => {
+      console.log(err)
+    });
+
+
 
     //Going to separate into its own file.
-
-    //axios call to add to upvote/downvote
-
-    //   axios.put(`${HOST}api/topdiscussions/`)
-    //     .then(res => {
-    //       console.log(res.data)
-    //       updateDiscussionList(res.data)
-    //     }).catch(err => {
-    //       console.log(err);
-    //     })
-
     //axios call to update discussion state
     //Will update state specific to current view by passing in a prop string
     //that will identify current view being used and then set up conditionals
     //to initiate correct axios call. ex. top discussions vs subForum discussions
   }
 
-  // const handleOpenModal = () => {
-  //   updateOpenModal(true);
-  // };
+  const handleNextList = (num) => {
+    // "https://discussion-board-api-test.herokuapp.com/api/topdiscussions/?page=2"
+    console.log(num)
+    if (props.discListType === 'topdiscussions') {
+      if (num === 1) {
+        axios.get(`${HOST}api/${props.discListType}/`)
+          .then(res => {
+            updateDiscussionList(res.data.results)
+          }).catch(err => {
+            console.log(err);
+          });
+      } else {
+        axios.get(`${HOST}api/${props.discListType}/?page=${num}`)
+          .then(res => {
+            updateDiscussionList(res.data.results)
+            console.log(res)
+          }).catch(err => {
+            console.log(err);
+          });
+      }
+    } else if (props.discListType === 'subforums') {
+      if (num === 1) {
+        axios.get(`${HOST}api/${props.discListType}/${props.subforum}/discussions/`)
+          .then(res => {
+            updateDiscussionList(res.data.results)
+          }).catch(err => {
+            console.log(err);
+          });
+      } else {
+        axios.get(`${HOST}api/${props.discListType}/${props.subforum}/discussions/?page=${num}`)
+          .then(res => {
+            updateDiscussionList(res.data.results)
+          }).catch(err => {
+            console.log(err);
+          });
+      }
+    }
+  }
 
   return (
     <>
@@ -144,7 +379,7 @@ export default withStyles(styles)(props => {
         return (
           <LazyLoad key={index} placeholder={<Loading />}>
             <Card raised="true" key={index} className={props.classes.discussion}>
-              <Link className={props.classes.clickableCard} to={`/f/${1}/discussion/${1}`}>
+              <Link className={props.classes.clickableCard} to={`/f/${discussion.subforum}/discussion/${discussion.id}/`}>
                 <CardMedia
                   className={props.classes.discussionImg}
                   image={logo}
@@ -170,16 +405,19 @@ export default withStyles(styles)(props => {
                   <Grid container direction="column">
                     {/* Add conditional to make one button have color based on
                     whether user voted */}
-                    <IconButton className={props.classes.upvoteBtn} name="upvote" onClick={(e) => handleVote(discussion.id, 'upvote', e)}>
+
+                    <IconButton className={upvoteState.includes(discussion.id) ? props.classes.upvoteBtn : null}
+                      name="upvote" onClick={(e) => handleVote(discussion.id, discussion.upvote, 'upvote', upvoteState, downvoteState, e)}>
                       <Icon>arrow_upward</Icon>
                     </IconButton>
                     <Votes
-                      upvote={discussion.upvote}
-                      downvote={discussion.downvote}
+                      upvote={discussion.upvote + addUpvote}
+                      downvote={discussion.downvote + addDownvote}
                       netUpvote={props.classes.netUpvote}
                       netDownvote={props.classes.netDownvote}
                     />
-                    <IconButton className={props.classes.downvoteBtn} name="downvote" onClick={(e) => handleVote(discussion.id, 'downvote', e)}>
+                    <IconButton className={downvoteState.includes(discussion.id) ? props.classes.downvoteBtn : null}
+                      name="downvote" onClick={(e) => handleVote(discussion.id, discussion.downvote, 'downvote', upvoteState, downvoteState, e)}>
                       <Icon>arrow_downward</Icon>
                     </IconButton>
                   </Grid>
@@ -194,6 +432,16 @@ export default withStyles(styles)(props => {
           <CircularProgress color="secondary" />
         </Grid>
       }
+      {/* {nextList.length !== 0 ? nextList.map(list => {
+        return(
+          <Button onClick={(e) => handleNextList(e)}></Button>
+        )
+      }): 'Loading'} */}
+      {pageNumbers.length > 0 ? pageNumbers.map(pageNum => {
+        return (
+          <Button onClick={() => handleNextList(pageNum)}>{pageNum}</Button>
+        )
+      }) : null}
     </>
   )
 })

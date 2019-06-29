@@ -31,7 +31,7 @@ export default withRouter(withStyles(styles)(props => {
 
   useEffect(() => {
     //Call for subforum name
-    axios.get(`${HOST}api/subforums/${props.match.params.id}/`)
+    axios.get(`${HOST}api/subforums/${props.match.params.subforumId}/`)
     .then(res => {
       console.log(res.data)
       updateSubForum(res.data);
@@ -40,7 +40,7 @@ export default withRouter(withStyles(styles)(props => {
     });
 
     //Call for subforum members
-    axios.get(`${HOST}api/subforums/${props.match.params.id}/members/`)
+    axios.get(`${HOST}api/subforums/${props.match.params.subforumId}/members/`)
     .then(res => {
       updateMembers(res.data.results)
     }).catch(err => {
@@ -56,6 +56,7 @@ export default withRouter(withStyles(styles)(props => {
     <Grid container className={classes.subForumContainer}>
       <Grid className={classes.subForumTop} container justify="space-between">
         <Typography variant="h3">{`/f/${subForum.name}`}</Typography>
+        {/* // user, username, subtopic/subforum properties to give to axios  */}
         <Button variant="contained" color='secondary'>Join!</Button>
         <ButtonGroup variant="contained">
           <Button onClick={(e) => handleHide('discussions', e)}>Discussions</Button>
@@ -64,7 +65,7 @@ export default withRouter(withStyles(styles)(props => {
         <SortBy classes={classes} />
       </Grid>
       {!hideDiscussions ?
-        <DiscussionsList discListType='subforums' subforum={props.match.params.id} />
+        <DiscussionsList discListType='subforums' subforum={props.match.params.subforumId} />
         : null}
       {!hideFollowers ?
       <Members />

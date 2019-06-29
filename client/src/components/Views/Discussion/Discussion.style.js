@@ -40,6 +40,8 @@ export const styles = {
       },
     commentCard:{
         width: '100%',
-        display: 'flex'
+        display: 'flex',
+        margin: '10px auto',
+        flexWrap: 'wrap'
     }
 }

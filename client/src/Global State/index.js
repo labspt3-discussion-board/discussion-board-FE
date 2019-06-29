@@ -6,6 +6,8 @@ export default () => {
     discussionList: [],
     openModal: false,
     drawerState: false,
-    members: []
+    members: [],
+    upvoteState: [],
+    downvoteState: []
   });
 }

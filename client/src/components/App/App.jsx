@@ -352,12 +352,12 @@ class App extends Component {
         />
 
         <Route
-          exact path='/f/:id/discussion/:id/'
+          exact path='/f/:subforumId/discussion/:discussionId/'
           component={Discussion}
         />
 
         <Route
-          exact path='/f/:id/'
+          exact path='/f/:subforumId/'
           component={SubForum}
         />
 
