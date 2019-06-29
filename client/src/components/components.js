@@ -6,4 +6,5 @@ export { default as LoginMessageModal  } from './LoginMessageModal/LoginMessageM
 export { default as NewSubforumModal   } from './NewSubforumModal/NewSubforumModal.jsx';
 export { default as SearchResults      } from './Views/SearchResults';
 export { default as Discussion         } from './Views/Discussion';
-export { default as SubForum           } from './Views/SubForum'
+export { default as SubForum           } from './Views/SubForum';
+export { default as Payment            } from './Views/Payment';

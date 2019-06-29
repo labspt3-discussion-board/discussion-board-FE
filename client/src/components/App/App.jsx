@@ -4,7 +4,7 @@ import {
   Login, Register, Landing,
   Navigation, LoginMessageModal,
   NewSubforumModal, SearchResults, Discussion,
-  SubForum
+  SubForum, Payment
 } from '../components.js';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faSignInAlt, faUserAlt, } from '@fortawesome/free-solid-svg-icons';
@@ -361,7 +361,10 @@ class App extends Component {
           component={SubForum}
         />
 
-
+        <Route
+          exact path='/payment/'
+          component={Payment}
+        />
 
       </Router>
     );
