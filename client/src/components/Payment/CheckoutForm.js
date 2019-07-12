@@ -14,6 +14,14 @@ class CheckoutForm extends Component {
   let {token} = await this.props.stripe.createToken();
   console.log(token);
 
+  // axios.post('http://127.0.0.1:8000/api/payment/', token.id, {
+  //   headers: {
+  //     'Authorization': 'Token ' + '5141e0976c89617c73d220a2aab647099dacad97',
+  //   }
+  // })
+  // .then(res => console.log('Charge Data: ' + res)
+  // .catch(err => console.log(err);
+
     axios(
       {
         method: 'post',
@@ -27,8 +35,8 @@ class CheckoutForm extends Component {
           stripetoken: token.id,
         }
       })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err))
 }
 
   render() {

@@ -7,4 +7,4 @@ export { default as NewSubforumModal   } from './NewSubforumModal/NewSubforumMod
 export { default as SearchResults      } from './Views/SearchResults';
 export { default as Discussion         } from './Views/Discussion';
 export { default as SubForum           } from './Views/SubForum';
-export { default as Payment            } from './Views/Payment';
+export { default as Payment            } from './Payment';
