@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {CardElement, injectStripe} from 'react-stripe-elements';
+import { Button, Card, TextField, Container } from '@material-ui/core';
+import AttachMoney from '@material-ui/icons/AttachMoney';
 import axios from 'axios';
 
 class CheckoutForm extends Component {
@@ -11,16 +13,6 @@ class CheckoutForm extends Component {
   async submit(ev) {
   let {token} = await this.props.stripe.createToken();
   console.log(token);
-
-  // axios
-  //   .post('http://127.0.0.1:8000/api/payment/', token)
-  //   .then(res => {
-  //     console.log(token);
-  //     console.log(res.data);
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //   });
 
     axios(
       {
@@ -41,11 +33,31 @@ class CheckoutForm extends Component {
 
   render() {
     return (
-      <div className="checkout">
-        <p>Would you like to complete the purchase?</p>
-        <CardElement />
-        <button onClick={this.submit}>Send</button>
-      </div>
+      <Card className={this.props.classes.card}>
+        <h3>Premium User Payment</h3>
+        <TextField
+          id="outlined-fname"
+          label="First Name"
+          variant="outlined"
+          className={this.props.classes.inputsWidth} />
+        <TextField
+          id="outlined-lname"
+          label="Last Name"
+          variant="outlined"
+          className={this.props.classes.inputsWidth}/>
+        <TextField
+          id="outlined-email"
+          label="Email"
+          variant="outlined"
+          className={this.props.classes.inputsWidth}/>
+        <CardElement className={this.props.classes.inputsWidth}/>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={this.submit}
+          className={this.props.classes.inputsWidth}>Submit Payment<AttachMoney />
+        </Button>
+      </Card>
     );
   }
 }
